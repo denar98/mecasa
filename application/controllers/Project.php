@@ -169,6 +169,9 @@ class Project extends CI_Controller {
     $i = 1;
     foreach ($project->result() as $rows) {
       $financial_project = $this->custom_model->getInFinancialProject($rows->project_id)->row();
+      $financial_keluar_total = $this->custom_model->getFinancialProjectTotal($rows->project_id,'Uang Keluar')->row();
+      $financial_masuk_total = $this->custom_model->getFinancialProjectTotal($rows->project_id,'Uang Masuk')->row();
+
       // $base_url = base_url()."Project/detail/";
       // $url="'$base_url$rows->project_id'";
       $data[] = array(
