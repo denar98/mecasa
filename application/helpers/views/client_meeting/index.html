@@ -1,0 +1,241 @@
+<style>
+  @media only screen and (max-width: 600px) {
+    .fc-toolbar-chunk{
+    display:none;
+    }
+    .fc-header-toolbar{
+      display:none;
+      margin-bottom:0px !important;
+    }
+  }
+  
+</style>
+<div class="page-body">
+  <div class="container-fluid">
+    <div class="page-title">
+      <div class="row">
+      </div>
+    </div>
+  </div>
+  <!-- Container-fluid starts-->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Ajax data source array start-->
+
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="float-left">Data Meeting</h5>
+            <button type="button" class="btn btn-secondary float-right" name="button" data-toggle="modal" data-target="#addModal">Tambah Agenda</button>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="datatables" id="client-table">
+                <thead>
+                  <tr>
+                    <th>Nama Klien</th>
+                    <th>Tanggal Meeting</th>
+                    <th>Tempat Meeting</th>
+                    <th>Jenis Meeting</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php
+                  foreach($meetings as $meeting){
+
+                  ?>
+                  <tr>
+                    <td><?=$meeting->client_name?></td>
+                    <td><?=$meeting->meeting_date?></td>
+                    <td><?=$meeting->meeting_location?></td>
+                    <td><?=$meeting->meeting_type?></td>
+                    <td><?=$meeting->meeting_status?></td>
+                    <td>
+                      <a href="#" class="btn btn-warning mr-1" onclick="getClientMeeting('<?=$meeting->client_meeting_id?>')" data-toggle="modal" data-target="#updateModal" title="Edit"><i class="fa fa-pencil"></i></a>
+                      <a href="<?=base_url()?>ClientMeeting/deleteAction/<?=$meeting->client_meeting_id?>" class="btn btn-danger mr-1" title="Hapus"><i class="fa fa-trash"></i></a>
+                    </td>
+                  </tr>
+                  <?php } ?>
+                </tbody>
+
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Ajax data source array end-->
+    </div>
+  </div>
+  <!-- Container-fluid Ends-->
+</div>
+
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form class="" action="<?=base_url()?>ClientMeeting/addAction" method="post">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Tambah Agenda Meeting</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="theme-form">
+              <div class="form-group">
+                <label class="col-form-label">Nama Klien</label>
+                <select name="client_id" class="form-control">
+                  <?php
+                  foreach($clients as $client){
+
+                  ?>
+                  <option value="<?=$client->client_id?>"><?=$client->client_name?></option>
+
+                  <?php } ?>
+                </select>
+                <!-- <input class="form-control" name="client_name" type="text" required> -->
+              </div>
+              <div class="form-group">
+                <label class="col-form-label">Tanggal Meeting</label>
+                <input class="datepicker-here form-control digits" type="text" data-language="en" name="meeting_date" required autocomplete="off">
+                <!-- <input class="form-control" name="client_phone" type="text" required> -->
+              </div>
+              <div class="form-group">
+                <label class="col-form-label">Jam Meeting</label>
+                <input class="form-control" type="time" data-language="en" name="meeting_time" required autocomplete="off">
+                <!-- <input class="form-control" name="client_phone" type="text" required> -->
+              </div>
+              <div class="form-group">
+                <label class="col-form-label">Tempat Meeting</label>
+                <input type="text" name="meeting_location" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label class="col-form-label">Jenis Meeting</label>
+                <select name="meeting_type" class="form-control">
+                   <option value="Meeting Klien Baru">Meeting Klien Baru</option>
+                   <option value="Checksite">Checksite</option>
+                   <option value="Meeting Progress">Meeting Progress</option>
+                </select>            
+              </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-warning" data-dismiss="modal">Batal</button>
+          <button type="submit" id="btn-add" class="btn btn-secondary">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form class="" action="<?=base_url()?>ClientMeeting/updateAction" method="post">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Agenda Meeting</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="theme-form">
+
+            <div class="form-group">
+              <input class="form-control" type="hidden" name="client_meeting_id" id="client_meeting_id" required>
+              <label class="col-form-label">Nama Klien</label>
+              <select name="client_id" id="client_id" class="form-control">
+                <?php
+                foreach($clients as $client){
+
+                ?>
+                <option value="<?=$client->client_id?>"><?=$client->client_name?></option>
+
+                <?php } ?>
+              </select>
+              <!-- <input class="form-control" name="client_name" type="text" required> -->
+            </div>
+            <div class="form-group">
+              <label class="col-form-label">Tanggal Meeting</label>
+              <input class="datepicker-here form-control digits" type="text" data-language="en" name="meeting_date" id="meeting_date" required autocomplete="off">
+              <!-- <input class="form-control" name="client_phone" type="text" required> -->
+            </div>
+            <div class="form-group">
+              <label class="col-form-label">Jam Meeting</label>
+              <input class="form-control" type="time" data-language="en" name="meeting_time" id="meeting_time" required autocomplete="off">
+              <!-- <input class="form-control" name="client_phone" type="text" required> -->
+            </div>
+            <div class="form-group">
+              <label class="col-form-label">Tempat Meeting</label>
+              <input type="text" name="meeting_location"  id="meeting_location" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="col-form-label">Jenis Meeting</label>
+              <select name="meeting_type" id="meeting_type" class="form-control">
+                 <option value="Meeting Klien Baru">Meeting Klien Baru</option>
+                 <option value="Checksite">Checksite</option>
+                 <option value="Meeting Progress">Meeting Progress</option>
+              </select>            
+            </div>
+            <div class="form-group">
+              <label class="col-form-label">Status Meeting</label>
+              <select name="meeting_status" id="meeting_status" class="form-control">
+                 <option value="Belum Selesai">Belum Selesai</option>
+                 <option value="Selesai">Selesai</option>
+                 <option value="Batal">Batal</option>
+              </select>            
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-warning" data-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-secondary" id="btn-update">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+
+  $(document).ready(function(e){
+    var base_url = "<?php echo base_url();?>"; // You can use full url here but I prefer like this
+    
+    $('#client-table').DataTable({
+       "pageLength" : 10,
+    }); // End of DataTable
+
+    // var base_url = "<?php echo base_url();?>"; // You can use full url here but I prefer like this
+    // $('#user-table').DataTable({
+    //    "pageLength" : 10,
+    //    "serverSide": true,
+    //    "order": [[0, "asc" ]],
+    //    "ajax":{
+    //             url :  base_url+'Client/getAllClient',
+    //             type : 'POST'
+    //           },
+    // }); // End of DataTable
+
+
+  }); // End Document Ready Function
+
+  function getClientMeeting(client_meeting_id){
+    var client_meeting_id = client_meeting_id;
+    $.ajax({
+      type: "POST",
+      url: "<?php echo site_url('ClientMeeting/getClientMeeting');?>",
+      data: "client_meeting_id="+client_meeting_id,
+      success: function (response) {
+        var row = JSON.parse(response);
+        $('#client_meeting_id').val(row.client_meeting_id);
+        $('#client_id').val(row.client_id);
+        $('#meeting_date').val(row.meeting_date);
+        $('#meeting_time').val(row.meeting_time);
+        $('#meeting_location').val(row.meeting_location);
+        $('#meeting_status').val(row.meeting_status);
+        // $('#client_status').val(row.client_status);
+      }
+    });
+  }
+
+</script>

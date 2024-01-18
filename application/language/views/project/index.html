@@ -1,0 +1,328 @@
+
+        <div class="page-body">
+          <div class="container-fluid">
+            <div class="page-title">
+              <div class="row">
+              </div>
+            </div>
+          </div>
+          <!-- Container-fluid starts-->
+          <div class="container-fluid">
+            <div class="row">
+
+              <!-- <div class="col-md-12 project-list">
+                <div class="card">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <ul class="nav nav-tabs border-tab" id="top-tab" role="tablist">
+                        <li class="nav-item"><a class="nav-link active" id="top-home-tab" data-toggle="tab" href="#top-all" role="tab" aria-controls="top-home" aria-selected="true"><i data-feather="target"></i>All Projek</a></li>
+                        <li class="nav-item"><a class="nav-link" id="profile-top-tab" data-toggle="tab" href="#top-design" role="tab" aria-controls="top-profile" aria-selected="false"><i data-feather="image"></i>Projek Design</a></li>
+                        <li class="nav-item"><a class="nav-link" id="contact-top-tab" data-toggle="tab" href="#top-produksi" role="tab" aria-controls="top-contact" aria-selected="false"><i data-feather="home"></i>Projek Produksi</a></li>
+                      </ul>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="text-right">
+                        <div class="form-group mb-0 mr-0"></div><a class="btn btn-secondary" href="projectcreate.html"> <i data-feather="plus-square"> </i>Create New Project</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+
+              <!-- Ajax data source array start-->
+              <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <h5>Data Project</h5>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="text-right">
+                          <a href="<?=base_url()?>Project/create"> <button type="button" class="btn btn-secondary float-right" name="button">Tambah Project</button></a>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <button type="button" class="btn btn-secondary float-right" name="button" data-toggle="modal" data-target="#addModal">Tambah KBM</button> -->
+                  </div>
+                  <div class="card-body">
+                    <div class="tab-content" id="top-tabContent">
+                      <div class="row mb-4">
+                        <div class="col-md-4">
+                          <h6>Filter Status</h6>
+                          <select name="project_status" id="project_status" class="form-control">
+                            <option value="All">All</option>
+                            <option value="Progress">Progress</option>
+                            <option value="Done">Done</option>
+                          </select>
+                        </div>
+                        <div class="col-md-4">
+                          <h6>Filter Jenis Project</h6>
+                          <select name="project_type" id="project_type" class="form-control">
+                            <option value="All">All</option>
+                            <option value="Design">Design</option>
+                            <option value="Produksi">Produksi</option>
+                          </select>
+                        </div>
+                        <div class="col-md-4">
+                          <h6>Filter Nama Klien</h6>
+                          <!-- <input type="text" placeholder="Pencarian" class="form-control" id="keyword-form" name="" value=""> -->
+                          <select name="client_id" id="client_id" class="form-control js-example-basic-single">
+                          <option value="All">All</option>
+                          <?php
+                            foreach($clients as $client){
+                          ?>
+                          <option value="<?=$client->client_id?>"><?=$client->client_name?></option>
+
+                          <?php } ?>
+                        </select>
+                        </div>
+  
+                      </div>
+                      <div class="tab-pane fade show active" id="top-all" role="tabpanel" aria-labelledby="top-all-tab">
+                        <!-- Load Data By Ajax -->
+                      </div>
+                      <div class="tab-pane fade" id="top-design" role="tabpanel" aria-labelledby="top-design-tab">
+                        <!-- Load Data By Ajax -->
+                      </div>
+                      <div class="tab-pane fade" id="top-produksi" role="tabpanel" aria-labelledby="top-produksi-tab">
+                        <!-- Load Data By Ajax -->
+                      </div>
+                    </div>
+                    <p class="text-center text-info mt-3" id="load_data_message"></p>
+                  </div>
+                </div>
+              </div>
+              <!-- Ajax data source array end-->
+            </div>
+          </div>
+          <!-- Container-fluid Ends-->
+        </div>
+        <script>
+          $(document).ready(function(){
+
+            var limit = 5;
+            var start = 0;
+            var action = 'inactive';
+            var project_type = $( "#project_type").val();
+            var project_status = $( "#project_status").val();
+            var keyword = $( "#keyword-form").val();
+            var client_id = $( "#client_id").val();
+            function lazzy_loader(limit)
+            {
+              var output = '';
+              for(var count=0; count<limit; count++)
+              {
+                output += '<div class="post_data">';
+                output += '<p><span class="content-placeholder" style="width:100%; height: 30px;">&nbsp;</span></p>';
+                output += '<p><span class="content-placeholder" style="width:100%; height: 100px;">&nbsp;</span></p>';
+                output += '</div>';
+              }
+              // $('#top-home').html(output);
+            }
+
+            lazzy_loader(limit);
+
+            function load_data(limit, start, keyword, project_status, project_type, client_id)
+            {
+              $.ajax({
+                url:"<?php echo base_url(); ?>Project/fetchProjectFilter",
+                method:"POST",
+                data:{limit:limit, start:start, keyword:keyword, project_status:project_status, project_type:project_type, client_id:client_id},
+                cache: false,
+                success:function(data)
+                {
+                  if(data == '')
+                  {
+                    $('#load_data_message').html('<h7><i>No More Result Found</i></h7>');
+                    action = 'active';
+                  }
+                  else
+                  {
+                    $('#top-all').append(data);
+                    $('#load_data_message').html("");
+                    action = 'inactive';
+                  }
+                }
+              })
+            }
+
+            if(action == 'inactive')
+            {
+              action = 'active';
+              load_data(limit, start, keyword, project_status, project_type, client_id);
+            }
+
+
+
+            $( "#keyword-form").keyup(function() {
+              var keyword = $(this).val();
+              var project_type = $( "#project_type").val();
+              var project_status = $( "#project_status").val();
+              var client_id = $( "#client_id").val();
+              start = 0;
+              console.log(start);
+              console.log('limit'+limit);
+              $('#load_data_message').html('<h7><i>Please Wait...</i></h7>');
+
+              setTimeout(
+              function() 
+              {
+                $.ajax({
+                url:"<?php echo base_url(); ?>Project/fetchProjectFilter",
+                method:"POST",
+                data:{limit:limit, start:start, keyword:keyword, project_status:project_status, project_type:project_type, client_id:client_id},
+                cache: false,
+                success:function(data)
+                {
+                  if(data == '')
+                  {
+                    $('#top-all').html(data);
+                    $('#load_data_message').html('<h7><i>No Result Found</i></h7>');
+                    action = 'active';
+                  }
+                  else
+                  {
+                    $('#top-all').html(data);
+                    $('#load_data_message').html("");
+                    action = 'inactive';
+                  }
+                }
+              });
+              }, 500);
+            });
+
+            $( "#project_status").change(function() {
+              var keyword = $( "#keyword-form").val();
+              var project_type = $( "#project_type").val();
+              var project_status = $(this).val();
+              var client_id = $( "#client_id").val();
+
+              start = 0;
+              $('#load_data_message').html('<h7><i>Please Wait...</i></h7>');
+
+              setTimeout(
+              function() 
+              {
+                $.ajax({
+                url:"<?php echo base_url(); ?>Project/fetchProjectFilter",
+                method:"POST",
+                data:{limit:limit, start:start, keyword:keyword, project_status:project_status, project_type:project_type,client_id:client_id},
+                cache: false,
+                success:function(data)
+                {
+                  if(data == '')
+                  {
+                    $('#top-all').html(data);
+                    $('#load_data_message').html('<h7><i>No Result Found</i></h7>');
+                    action = 'active';
+                  }
+                  else
+                  {
+                    $('#top-all').html(data);
+                    $('#load_data_message').html("");
+                    action = 'inactive';
+                  }
+                }
+              });
+              }, 500);
+            });
+
+            $( "#project_type").change(function() {
+              var project_status = $( "#project_status").val();
+              var keyword = $( "#keyword-form").val();
+              var project_type = $(this).val();
+              var client_id = $( "#client_id").val();
+              start = 0;
+              console.log(start);
+              console.log('limit'+limit);
+              $('#load_data_message').html('<h7><i>Please Wait...</i></h7>');
+
+              setTimeout(
+              function() 
+              {
+                $.ajax({
+                url:"<?php echo base_url(); ?>Project/fetchProjectFilter",
+                method:"POST",
+                data:{limit:limit, start:start, keyword:keyword, project_status:project_status, project_type:project_type,client_id:client_id},
+                cache: false,
+                success:function(data)
+                {
+                  if(data == '')
+                  {
+                    $('#top-all').html(data);
+                    $('#load_data_message').html('<h7><i>No Result Found</i></h7>');
+                    action = 'active';
+                  }
+                  else
+                  {
+                    $('#top-all').html(data);
+                    $('#load_data_message').html("");
+                    action = 'inactive';
+                  }
+                }
+              });
+              }, 500);
+            });
+
+            $( "#client_id").change(function() {
+              var project_status = $( "#project_status").val();
+              var project_type = $( "#project_type").val();
+              var keyword = $( "#keyword-form").val();
+              var client_id = $(this).val();
+              start = 0;
+              console.log(start);
+              console.log('limit'+limit);
+              $('#load_data_message').html('<h7><i>Please Wait...</i></h7>');
+
+              setTimeout(
+              function() 
+              {
+                $.ajax({
+                url:"<?php echo base_url(); ?>Project/fetchProjectFilter",
+                method:"POST",
+                data:{limit:limit, start:start, keyword:keyword, project_status:project_status, project_type:project_type,client_id:client_id},
+                cache: false,
+                success:function(data)
+                {
+                  if(data == '')
+                  {
+                    $('#top-all').html(data);
+                    $('#load_data_message').html('<h7><i>No Result Found</i></h7>');
+                    action = 'active';
+                  }
+                  else
+                  {
+                    $('#top-all').html(data);
+                    $('#load_data_message').html("");
+                    action = 'inactive';
+                  }
+                }
+              });
+              }, 500);
+            });
+
+
+            $(window).scroll(function(){
+              if($(window).scrollTop() + $(window).height() > $("#top-all").height() && action == 'inactive')
+              {
+                // lazzy_loader(limit);
+                // keyword = $('#keyword-form').val();
+                var project_type = $( "#project_type").val();
+                var project_status = $( "#project_status").val();
+                var keyword = $( "#keyword-form").val();
+                console.log(keyword);
+                action = 'active';
+                start = start + limit;
+                $('#load_data_message').html('<h7><i>Please Wait...</i></h7>');
+                setTimeout(function(){
+                  load_data(limit, start, keyword, project_status, project_type, client_id);
+                }, 500);
+              }
+            });
+
+
+          });
+
+
+        </script>

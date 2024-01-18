@@ -1,0 +1,101 @@
+
+.badge-grade{
+  position: relative !important;
+  float: right;
+  margin-left: 10px;
+  text-align: left;
+  top: 0 !important;
+  right: 0 !important;
+}
+.fc-toolbar-chunk>button{
+margin-left:5px !important;
+}
+.fc-h-event .fc-event-title{
+  height: 2.5em !important;
+  padding: 7px;
+  /* vertical-align: middle !important; */
+}
+.fc-daygrid-event-harness{
+  margin-top:5px !important;  
+}
+.fc-button-group button{
+  margin-right:5px !important;
+  border-radius: 3px !important;
+}
+/* body{
+  color : #000000;
+} */
+.project-box .media .media-body{
+  opacity: 1;
+}
+
+.select2-container .select2-selection--single{
+  border:1px solid #ced4da !important;
+}
+.project-box{
+  border:1px solid #ced4da !important;
+  margin: 10px 0;
+}
+.project-box .badge {
+  position: absolute;
+  right: 30px;
+  top: 25px;
+}
+::-webkit-scrollbar-thumb{
+  background-color: rgb(31 159 194 / 10%) !important;
+}
+.text-primary{
+  color: #073D5E !important;
+}
+.page-wrapper .sidebar-main-title > div:hover{
+  background-color: rgb(31 159 194 / 10%);
+}
+.link-nav:hover{
+
+  background-color: rgb(31 159 194 / 10%) !important;
+}
+.customizer-links{
+  /* display: none !important; */
+}
+.logo-wrapper{
+  /* text-align: center !important; */
+  /* padding: 0 10px !important; */
+}
+.fa{
+  margin-right:8px !important;
+}
+.tick-label{
+  font-size : 12px !important;
+}
+.tick-flip-panel{
+  background: #f05b3b !important;
+}
+.tick-group{
+  margin:0 5px !important;
+  text-align: center;
+}
+.tick-credits{
+  display: none;
+}
+.activity-timeline .activity-line{
+  top: 132px;
+  height: 57%;
+  position: absolute;
+  width: 4px;
+  background-color: #f8f8f8;
+  margin: 0 auto;
+  left: 46px;
+  z-index: 1;
+}
+@media only screen and (max-width: 1440px) {
+  .tick-label{
+    font-size:9px !important;
+  }
+  /* .tick-group{
+    margin:0 10px !important;
+  } */
+  .sidebar-wrapper{
+    /* top:80px !important; */
+    z-index: 2;
+  }
+}

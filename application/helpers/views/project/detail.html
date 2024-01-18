@@ -1,0 +1,525 @@
+
+        <div class="page-body">
+          <div class="container-fluid">
+            <div class="page-title">
+              <div class="row">
+              </div>
+            </div>
+          </div>
+          <!-- Container-fluid starts-->
+          <div class="container-fluid">
+            <div class="row">
+              <!-- Ajax data source array start-->
+              <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h5 class="float-left">Detail Project</h5>
+                    <a href="<?=base_url()?>Project/createProgress/<?=$project->project_id?>/<?=$project->project_detail_id?>"> <button type="button" class="btn btn-secondary float-right  ml-3">Tambah Progress</button></a>
+                    <button type="button" class="btn btn-primary float-right" name="button" data-toggle="modal" data-target="#addHistoryModal">Tambah History Keuangan</button>
+                    <a href="<?=base_url()?>Project/edit/<?=$project->project_id?>"> <button type="button" class="btn btn-warning float-right mr-3" name="button" >Edit Project</button></a>
+                  </div>
+                  <div class="card-body">
+                    <div class="tab-content" id="top-tabContent">
+                      <div class="default-according style-1 faq-accordion" id="accordionExample1">
+                        <div class="row">
+                          <div class="col-xl-9 col-lg-9">
+                            <div class="card ">
+                              <div class="card-header" id="headingOneone">
+                                <h2 class="mb-0">
+                                  <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOneone" aria-expanded="true" aria-controls="collapseOneone">Project Requirement</button>
+                                </h2>
+                              </div>
+                              <div class="collapse show" id="collapseOneone" aria-labelledby="headingOneone" data-parent="#accordionExample1">
+                                <div class="card-body socialprofile filter-cards-view">
+                                  <?=$project->brief?>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="card ">
+                              <div class="card-header" id="headingTwo">
+                                <h2 class="mb-0">
+                                  <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">History Progress</button>
+                                </h2>
+                              </div>
+                              <div class="collapse show" id="collapseTwo" aria-labelledby="headingTwo" data-parent="#accordionExample1">
+                                <div class="card-body socialprofile filter-cards-view" id="divProgress">
+                                  <div class="activity-timeline" id="activity-timeline">
+                                    <!-- <div class="activity-line" style="height:50%;"></div> -->
+
+                                  </div>
+                                </div>
+                                <div class="card-footer">                    
+                                  <p class="text-center text-info mt-3" id="load_data_message"></p>
+                                </div>
+                              </div>
+                            </div>
+                            
+                          </div>
+                          <div class="col-xl-3 col-lg-3">
+
+                            <div class="card" >
+                              <div class="card-header">Project Timeline</div>
+                              <div class="card-body p-4" style="border-radius:10px;">
+                                <!-- <span class="btn btn-primary btn-xs mb-3 text-white"> Project Timeline</span> -->
+                                <p>Tanggal Masuk  <span class="pull-right font-weight-bold"><?=date_format(date_create($project->start_date),"d M Y") ?></span></p>
+                                <p>Deadline  <span class="pull-right  font-weight-bold"><?=date_format(date_create($project->deadline),"d M Y") ?></span></p>
+                                <div class="tick" data-did-init="handleTickInit">
+                              
+                                    <div data-repeat="true"
+                                          data-layout="horizontal center fit"
+                                          data-transform="preset(d, h, m, s) -> delay">
+                                
+                                        <div class="tick-group">
+                                
+                                            <div data-key="value"
+                                                  data-repeat="true"
+                                                  data-transform="pad(00) -> split -> delay">
+                              
+                                                <span data-view="flip"></span>
+                                
+                                            </div>
+                                
+                                            <span data-key="label"
+                                                  data-view="text"
+                                                  class="tick-label"></span>
+                                
+                                        </div>
+                                
+                                    </div>
+                                
+                                </div>
+
+                              </div>
+                            </div>
+
+                            <div class="card mt-4" >
+                              <div class="card-header">Project Detail</div>
+                              <div class="card-body p-4" style="border-radius:10px;">
+                                <h6 class=""><?= $project->project_name ?></h6>
+                                <span class="btn btn-primary btn-xs mb-3 text-white"> Project <?= $project->project_detail_type?></span>
+                                <p>Nama Klien  <span class="pull-right font-weight-bold"> <?= $project->client_name?></span></p>
+                                <p>Nama PIC  <span class="pull-right font-weight-bold"> <?= $project->user_fullname?></span></p>
+                                <p>Nominal Project  <span class="pull-right font-weight-bold"> Rp. <?= number_format($project->project_detail_nominal)?></span></p>
+                                <p>Estimasi Profit  <span class="pull-right font-weight-bold"> Rp. <?= number_format($project->profit_estimation)?></span></p>
+                              </div>
+                            </div>
+                            <div class="card mt-4" >
+                              <div class="card-header">Project Attachments</div>
+                              <div class="card-body p-4" style="border-radius:10px;">
+                                <ul class="list-group list-group-flush">
+                                  <?php foreach($attachments as $attachment){ ?>
+                                    <li class="list-group-item"><a href="<?=base_url()?>assets/attachments/<?=$attachment->attachment_name?>" download ><?=$attachment->attachment_name?></a></li>
+                                  <?php } ?>
+                                </ul>                                
+                              </div>
+                            </div>
+                            <div class="card mt-4" >
+                              <div class="card-header">Financial Histories</div>
+                              <div class="card-body p-4" style="border-radius:10px; overflow-y: scroll; height:400px;">
+                                <ul class="list-group list-group-flush">
+                                  <?php foreach($financials as $financial){ 
+                                    if($financial->financial_type == 'Uang Keluar'){
+                                      $btn_color = 'secondary';
+                                    }
+                                    else{
+                                      $btn_color = 'success';
+
+                                    }
+                                    ?>
+                                    <div class="activity-dot-<?=$btn_color?>" style="margin-top:18px;"></div>
+                                    <li class="list-group-item" style="margin-top:-31px; margin-left:10px;">
+                                      <a  data-toggle="modal" data-target="#editHistoryModal" style="cursor: pointer;" onclick="updateHistoryFinancial('<?=$financial->project_financials_id?>')"><p style="font-weight: bold; margin-bottom:0px;"> Rp. <?=number_format($financial->financial_nominal)?> - <span style="font-weight: 300;"><?=$financial->financial_type?></span>  </p></a>
+                                      <a  data-toggle="modal" data-target="#photoHistoryModal" style="cursor: pointer;" onclick="photoHistoryFinancial('<?=$financial->project_financials_id?>')"><p style="margin-top:0px;"><?=date_format(date_create($financial->financial_date),"d M Y") ?> | <?=$financial->financial_note?>  | <?=$financial->financial_pic?></p></a>
+                                    </li>
+                                  <?php } ?>
+                                
+                                </ul> 
+                                <hr>
+                                  <p class="text-success" style="font-weight: bold; margin-bottom:0px;"> TOTAL MASUK <span class="pull-right">Rp. <?=number_format($financial_masuk_total->total)?> </span> </p>
+                                  <p  class="text-secondary" style="font-weight: bold; margin-bottom:0px;"> TOTAL KELUAR <span class="pull-right">Rp. <?=number_format($financial_keluar_total->total)?></span></p>
+                                  <p style="font-weight: bold; margin-bottom:0px;"> TOTAL MARGIN <span class="pull-right">Rp. <?=number_format($financial_masuk_total->total - $financial_keluar_total->total)?></span></p>
+                                                 
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Ajax data source array end-->
+            </div>
+          </div>
+          <!-- Container-fluid Ends-->
+        </div>
+        <div class="modal fade" id="addProgressModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <form class="" action="<?=base_url()?>Project/addProgressAction" method="post">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Tambah Progress</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="theme-form">
+                      <div class="form-group">
+                        <input type="hidden" name="project_id" id="project_id" value="<?=$project->project_id?>">
+                        <input type="hidden" name="project_detail_id" id="project_detail_id" value="<?=$project->project_detail_id?>">
+                      </div>
+                      <div class="form-group">
+                        <label class="col-form-label">Tipe Progress</label>
+                        <select class="form-control" name="progress_type" required>
+                          <option value="Preview Awal">Preview Awal</option>
+                          <option value="Revisi">Revisi</option>
+                          <option value="Final">Final</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Persentasi Progress</label>
+                        <input type="number" class="form-control" name="project_detail_percentage" id="project_detail_percentage">
+                      </div>
+                      <div class="form-group">
+                        <label>Note Progress</label>
+                        <textarea class="summernote2" name="progress_note">
+                            <p class="text-muted">
+                            </p>
+                        </textarea>
+                      </div>
+
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-warning" data-dismiss="modal">Batal</button>
+                  <button type="submit" id="btn-add" class="btn btn-secondary">Simpan</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="editProgressModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <form class="" action="<?=base_url()?>Project/updateProgressAction" method="post">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Edit Progress</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="theme-form">
+                      <div class="form-group">
+                        <input type="hidden" name="project_id" id="project_id_edit">
+                        <input type="hidden" name="project_detail_id" id="project_detail_id_edit">
+                        <input type="hidden" name="progress_history_id" id="progress_history_id_edit">
+                      </div>
+                      <div class="form-group">
+                        <label class="col-form-label">Tipe Progress</label>
+                        <select class="form-control" name="progress_type" id="progress_type_edit" required>
+                          <option value="Preview Awal">Preview Awal</option>
+                          <option value="Revisi">Revisi</option>
+                          <option value="Final">Final</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Persentasi Progress</label>
+                        <input type="number" class="form-control" name="project_detail_percentage" id="project_detail_percentage_edit">
+                      </div>
+                      <div class="form-group">
+                        <label>Note Progress</label>
+                        <textarea class="summernote3" name="progress_note" id="progress_note_edit">
+                            <p class="text-muted">
+                            </p>
+                        </textarea>
+                      </div>
+
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-warning" data-dismiss="modal">Batal</button>
+                  <button type="submit" id="btn-add" class="btn btn-secondary">Simpan</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="addHistoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <form class="" action="<?=base_url()?>Project/addHistoryAction" method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Tambah History Keuangan</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="theme-form">
+                      <div class="form-group">
+                        <input type="hidden" name="project_id" id="project_id" value="<?=$project->project_id?>">
+                        <input type="hidden" name="project_detail_id" id="project_detail_id" value="<?=$project->project_detail_id?>">
+                      </div>
+                      <div class="form-group">
+                        <label>Tanggal</label>
+                        <input class="datepicker-here form-control digits" type="text" data-language="en" name="financial_date" required autocomplete="off">
+                        <!-- <input class="form-control" type="text" name="project_name" placeholder="Nama Project*" required> -->
+                      </div>
+                      <div class="form-group">
+                        <label class="col-form-label">Jenis History Keuangan</label>
+                        <select class="form-control" name="financial_ops_type" required>
+                          <option value="">-</option>
+                          <option value="Operasional Project">Operasional Project</option>
+                          <option value="Operasional Mecasa">Operasional Mecasa</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-form-label">Tipe History Keuangan</label>
+                        <select class="form-control" name="financial_type" required>
+                          <option value="">-</option>
+                          <option value="Uang Keluar">Uang Keluar</option>
+                          <option value="Uang Masuk">Uang Masuk</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Keterangan</label>
+                        <input class="form-control" type="text" name="financial_note" required>
+                      </div>
+                      <div class="form-group">
+                        <label>Nominal</label>
+                        <input class="form-control digits autonumeric" type="text" name="financial_nominal" required autocomplete="off">
+                      </div>
+                      <div class="form-group">
+                        <label>Financial PIC</label>
+                        <input class="form-control" type="text" name="financial_pic" required>
+                      </div>
+                      <div class="form-group">
+                        <label>Attachment</label>
+                        <input type="file" class="form-control" name="attachments">
+ 
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-warning" data-dismiss="modal">Batal</button>
+                  <button type="submit" id="btn-add" class="btn btn-secondary">Simpan</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="editHistoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <form class="" action="<?=base_url()?>Project/updateHistoryAction" method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Edit History Keuangan</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="theme-form">
+                      <div class="form-group">
+                        <input type="hidden" name="mecasa_financial_id" id="mecasa_financial_id_edit" >
+                        <input type="hidden" name="project_financials_id" id="project_financials_id_edit" >
+                        <input type="hidden" name="project_id" id="project_id_history_edit" value="<?=$project->project_id?>">
+                        <input type="hidden" name="project_detail_id" id="project_detail_id_history_edit" value="<?=$project->project_detail_id?>">
+                      </div>
+                      <div class="form-group">
+                        <label>Tanggal</label>
+                        <input class="datepicker-here form-control digits" type="text" data-language="en" name="financial_date" id="financial_date_edit" required autocomplete="off">
+                        <!-- <input class="form-control" type="text" name="project_name" placeholder="Nama Project*" required> -->
+                      </div>
+                      <div class="form-group">
+                        <label class="col-form-label">Jenis History Keuangan</label>
+                        <select class="form-control" name="financial_ops_type" id="financial_ops_type_edit" required>
+                          <option value="">-</option>
+                          <option value="Operasional Project">Operasional Project</option>
+                          <option value="Operasional Mecasa">Operasional Mecasa</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-form-label">Tipe History Keuangan</label>
+                        <select class="form-control" name="financial_type" id="financial_type_edit" required>
+                          <option value="">-</option>
+                          <option value="Uang Keluar">Uang Keluar</option>
+                          <option value="Uang Masuk">Uang Masuk</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Keterangan</label>
+                        <input class="form-control" type="text" name="financial_note" id="financial_note_edit" required>
+                      </div>
+                      <div class="form-group">
+                        <label>Nominal</label>
+                        <input class="form-control digits autonumeric2" type="text" name="financial_nominal" id="financial_nominal_edit" required autocomplete="off">
+                      </div>
+                      <div class="form-group">
+                        <label>Financial PIC</label>
+                        <input class="form-control" type="text" name="financial_pic" id="financial_pic_edit" required>
+                      </div>
+                      <div class="form-group">
+                        <label>Attachment</label>
+                        <input type="file" class="form-control" name="attachments">
+ 
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <a href="" id="removeHistoryFinancialButton"><button type="button" class="btn btn-danger" >Hapus</button></a>
+                  <button type="button" class="btn btn-warning" data-dismiss="modal">Batal</button>
+                  <button type="submit" id="btn-add" class="btn btn-secondary">Simpan</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="photoHistoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <img class="img img-responsive" id="photoHistoryAttachment" style="width:80%;" src="">
+            </div>
+          </div>
+        </div>
+        
+        <script>
+          $(document).ready(function(){
+
+
+            var limit = 20;
+            var start = 0;
+            var action = 'inactive';
+
+            function lazzy_loader(limit)
+            {
+              var output = '';
+              for(var count=0; count<limit; count++)
+              {
+                output += '<div class="post_data">';
+                output += '<p><span class="content-placeholder" style="width:100%; height: 30px;">&nbsp;</span></p>';
+                output += '<p><span class="content-placeholder" style="width:100%; height: 100px;">&nbsp;</span></p>';
+                output += '</div>';
+              }
+              // $('#top-home').html(output);
+            }
+
+            lazzy_loader(limit);
+
+            function load_data(limit, start)
+            {
+              var project_detail_id = "<?=$project->project_detail_id;?>";
+              $.ajax({
+                url:"<?php echo base_url(); ?>Project/fetchProgress/"+project_detail_id,
+                method:"POST",
+                data:{limit:limit, start:start},
+                cache: false,
+                success:function(data)
+                {
+                  if(data == '')
+                  {
+                    $('#load_data_message').html('<h7><i>No More Result Found</i></h7>');
+                    action = 'active';
+                  }
+                  else
+                  {
+                    $('#activity-timeline').append(data);
+                    $('#load_data_message').html("");
+                    action = 'inactive';
+                  }
+                }
+              })
+            }
+
+            if(action == 'inactive')
+            {
+              action = 'active';
+              load_data(limit, start);
+            }
+
+            $(window).scroll(function(){
+              if($(window).scrollTop() + $(window).height() > $("#activity-timeline").height() && action == 'inactive')
+              {
+                lazzy_loader(limit);
+                action = 'active';
+                start = start + limit;
+                $('#load_data_message').html('<h7><i>Please Wait...</i></h7>');
+                setTimeout(function(){
+                  load_data(limit, start);
+                }, 1000);
+              }
+            });
+
+
+
+
+          });
+          function handleTickInit(tick) {
+
+
+            var nextYear = (new Date()).getFullYear() + 1;
+            var deadline = "<?=$project->deadline?>"
+            console.log(nextYear);
+            Tick.count.down(deadline).onupdate = function(value) {
+            tick.value = value;
+            };
+
+            }
+          function updateProgress(progress_history_id) {
+            $.ajax({
+              type: "POST",
+              url: "<?php echo site_url('Project/getHistoryProgressById');?>",
+              data: "progress_history_id="+progress_history_id,
+              success: function (response) {
+                var row = JSON.parse(response);
+                console.log(row);
+                $('#progress_history_id_edit').val(row.progress_history_id);
+                $('#project_id_edit').val(row.project_id);
+                $('#project_detail_id_edit').val(row.project_detail_id);
+                $('#project_detail_percentage_edit').val(row.progress_percentage);
+                $('#progress_note_edit').html(row.progress_note);
+                $('.note-editable').html(row.progress_note);
+                $("select#progress_type_edit option[value='"+row.progress_type+"']").prop("selected","selected");
+
+              }
+            });
+          }
+          function updateHistoryFinancial(project_financials_id) {
+            $.ajax({
+              type: "POST",
+              url: "<?php echo site_url('Project/getHistoryFinancialById');?>",
+              data: "project_financials_id="+project_financials_id,
+              success: function (response) {
+                var row = JSON.parse(response);
+                console.log(row);
+                $('#mecasa_financial_id_edit').val(row.mecasa_financial_id);
+                $('#project_financials_id_edit').val(row.project_financials_id);
+                $('#financial_date_edit').val(row.financial_date);
+                $('#financial_note_edit').val(row.financial_note);
+                $('#financial_nominal_edit').val(row.financial_nominal);
+                $('#financial_pic_edit').val(row.financial_pic);
+                $('#removeHistoryFinancialButton').prop("href", "<?=base_url()?>Project/deleteHistoryFinancialAction/<?=$project->project_id?>/"+row.project_financials_id);
+                $("select#financial_type_edit option[value='"+row.financial_type+"']").prop("selected","selected");
+                $("select#financial_ops_type_edit option[value='"+row.financial_ops_type+"']").prop("selected","selected");
+
+              }
+            });
+          }
+          function photoHistoryFinancial(project_financials_id) {
+            $.ajax({
+              type: "POST",
+              url: "<?php echo site_url('Project/getHistoryFinancialById');?>",
+              data: "project_financials_id="+project_financials_id,
+              success: function (response) {
+                var row = JSON.parse(response);
+                console.log(row);
+                $('#photoHistoryAttachment').attr('src','<?= base_url();?>assets/attachments/'+row.attachment_name);
+                $('#project_financials_id_edit').val(row.project_financials_id);
+            
+              }
+            });
+          }
+        </script>

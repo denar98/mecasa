@@ -1,0 +1,207 @@
+
+<div class="page-body">
+    <div class="container-fluid">
+      <div class="page-title">
+        <div class="row">
+        </div>
+      </div>
+    </div>
+    <!-- Container-fluid starts-->
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Ajax data source array start-->
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-sm-6">
+                  <h5>Tambah Data Project</h5>
+                </div>
+                <div class="col-sm-6">
+                  <div class="text-right">
+                    <!-- <button type="button" class="btn btn-secondary float-right" name="button" data-toggle="modal" data-target="#addModal">Tambah Project</button> -->
+
+                  </div>
+                </div>
+              </div>
+              <!-- <button type="button" class="btn btn-secondary float-right" name="button" data-toggle="modal" data-target="#addModal">Tambah KBM</button> -->
+            </div>
+            <div class="card-body">
+                <form action="<?=base_url()?>Project/addAction" method="post"  enctype="multipart/form-data">
+                    <div class="form theme-form">
+
+        
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Nama Project</label>
+                                    <input class="form-control" type="text" name="project_name" required>
+                                </div>
+                            </div>              
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Nama Klien</label>
+                                    <!-- <input class="form-control" type="text" placeholder="Project name *"> -->
+                                    <select name="client_id" class="form-control" required>
+                                    <?php
+                                    foreach($clients as $client){
+                    
+                                    ?>
+                                    <option value="<?=$client->client_id?>"><?=$client->client_name?></option>
+                
+                                    <?php } ?>
+                                    </select>
+                                </div>
+                            </div>                
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>PIC Project</label>
+                                    <select name="user_id" class="form-control" required>
+                                        <?php
+                                        foreach($users as $user){
+                        
+                                        ?>
+                                        <option value="<?=$user->user_id?>"><?=$user->user_fullname?></option>
+                    
+                                        <?php } ?>
+                                    </select>                            
+                                </div>
+                            </div>                  
+                        </div>
+                        <div class="row">
+
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Tipe Project</label>
+                                    <select name="project_detail_type" class="form-control" required>
+                                    <option value="Design">Design</option>
+                                    <option value="Produksi">Produksi</option>
+                                    </select>                            
+                                </div>
+                            </div>
+                            
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Nominal Project</label>
+                                    <input class="form-control digits autonumeric" type="text" name="project_detail_nominal" required autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Estimasi Profit</label>
+                                    <input class="form-control digits autonumeric2"  type="text" name="profit_estimation" required autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Status Project</label>
+                                    <select name="project_detail_type" class="form-control" required>
+                                    <option value="New">New</option>
+                                    <option value="Progress">Progress</option>
+                                    <option value="Done">Done</option>
+                                    </select>                            
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Persentase Progress</label>
+                                    <div class="input-group bootstrap-touchspin">
+                                        <input class="touchspin form-control" type="text" value="40" data-bts-postfix="%" data-original-title="" title="" style="display: block;">
+      
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Tanggal Masuk Project</label>
+                                    <input class="datepicker-here form-control digits" type="text" data-language="en" name="project_date" required autocomplete="off">
+                                    <!-- <input class="form-control" type="text" name="project_name" placeholder="Nama Project*" required> -->
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Tanggal Mulai Project</label>
+                                    <input class="datepicker-here form-control digits" type="text" data-language="en" name="start_date" required autocomplete="off">
+                                    <!-- <input class="form-control" type="text" name="project_name" placeholder="Nama Project*" required> -->
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Tanggal Deadline Project</label>
+                                    <input class="datepicker-here form-control digits" type="text" data-language="en" name="deadline" required autocomplete="off">
+                                    <!-- <input class="form-control" type="text" name="project_name" placeholder="Nama Project*" required> -->
+                                </div>
+                            </div>
+                        
+                        </div> 
+
+                        <!-- <div class="row">
+                            <div class="col">
+                            <div class="form-group">
+                                <label>Brief & Requirement Project</label>
+                                <textarea class="summernote2" name="brief">
+                                    <h5 class="text-warning">Konten:</h5>
+                                    <br><br><br><hr>
+                                    <h5 class="text-info">Warna:</h5>
+                                    <br><br><br><hr>
+                                    <h5 class="text-success">Ukuran:</h5>
+                                    <br><br><br><hr>
+                                    <h5 class="text-primary">Referensi:</h5>
+                                    <br><br><br><hr>
+                                    <p class="text-muted">
+                                    </p>
+                                </textarea>
+                            </div>
+                            </div>
+                        </div> -->
+
+                        <!-- <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label>Attachment</label>
+                                    <input type="file" class="form-control" name="files[]" multiple="">
+                                </div>
+                            </div>
+                        </div> -->
+                        <!-- <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <button class="btn btn-primary btn-previous" type="button">Previous</button>
+                                    <button type="submit" class="btn btn-secondary" >Simpan</button>
+                                </div>          
+                            </div>
+                        </div> -->
+  
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group mb-0 pull-right">
+                                    <button type="button" class="btn btn-warning" data-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-secondary" id="btn-update">Simpan</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+          </div>
+        </div>
+        <!-- Ajax data source array end-->
+      </div>
+    </div>
+    <!-- Container-fluid Ends-->
+  </div>
+  <script>
+    $(document).ready(function(){
+
+    });
+
+  </script>

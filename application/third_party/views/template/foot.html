@@ -1,0 +1,155 @@
+
+<!-- footer start-->
+<footer class="footer">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 footer-copyright text-center">
+        <p class="mb-0">Copyright 2023 ©   </p>
+      </div>
+    </div>
+  </div>
+</footer>
+</div>
+</div>
+
+
+<script src="<?=base_url()?>assets/js/clipboard/clipboard.min.js"></script>
+<script src="<?=base_url()?>assets/js/counter/jquery.waypoints.min.js"></script>
+<script src="<?=base_url()?>assets/js/counter/jquery.counterup.min.js"></script>
+<script src="<?=base_url()?>assets/js/counter/counter-custom.js"></script>
+<script src="<?=base_url()?>assets/js/custom-card/custom-card.js"></script>
+<script src="<?=base_url()?>assets/js/owlcarousel/owl.carousel.js"></script>
+<script src="<?=base_url()?>assets/js/tooltip-init.js"></script>
+<script src="<?=base_url()?>assets/js/sweet-alert/sweetalert.min.js"></script>
+<script src="<?=base_url()?>assets/js/select2.js"></script>
+<script src="<?=base_url()?>assets/js/select2/select2.full.min.js"></script>
+<script src="<?=base_url()?>assets/js/select2/select2-custom.js"></script>
+<script src="<?=base_url()?>assets/js/datepicker/date-picker/datepicker.js"></script>
+<script src="<?=base_url()?>assets/js/datepicker/date-picker/datepicker.en.js"></script>
+<script src="<?=base_url()?>assets/js/datepicker/date-picker/datepicker.custom.js"></script>
+<script src="<?=base_url()?>assets/js/datepicker/date-time-picker/moment.min.js"></script>
+<script src="<?=base_url()?>assets/js/datepicker/date-time-picker/tempusdominus-bootstrap-4.min.js"></script>
+<script src="<?=base_url()?>assets/js/datepicker/date-time-picker/datetimepicker.custom.js"></script>
+<script src="<?=base_url()?>assets/js/datepicker/daterange-picker/moment.min.js"></script>
+<script src="<?=base_url()?>assets/js/datepicker/daterange-picker/daterangepicker.js"></script>
+<script src="<?=base_url()?>assets/js/datepicker/daterange-picker/daterange-picker.custom.js"></script>
+<script src="<?=base_url()?>assets/js/editor/summernote/summernote.js"></script>
+<script src="<?=base_url()?>assets/js/editor/summernote/summernote.custom.js"></script>
+<script src="<?=base_url()?>assets/js/form-wizard/form-wizard-three.js"></script>
+<script src="<?=base_url()?>assets/js/form-wizard/jquery.backstretch.min.js"></script>
+<script src="<?=base_url()?>assets/js/tooltip-init.js"></script>
+<script src="<?=base_url()?>assets/js/autoNumeric.js"></script>
+<script src="<?=base_url()?>assets/js/flip.min.js"></script>    
+<script src="<?=base_url()?>assets/js/icons/feather-icon/feather.min.js"></script>
+<script src="<?=base_url()?>assets/js/icons/feather-icon/feather-icon.js"></script>
+<script src="<?=base_url()?>assets/js/sidebar-menu.js"></script>
+
+
+
+<script src="<?=base_url()?>assets/js/theme-customizer/customizer.js"></script>
+<script src="<?=base_url()?>assets/js/script.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function(e){
+    $('.select2').select2();
+    // $('.trumbowyg').trumbowyg();
+
+    $('#study_date').datetimepicker({
+      format: 'LT'
+    });
+
+    $('.summernote2').summernote( {
+      height: 500,
+      callbacks: {
+          onImageUpload: function(image) {
+          uploadImage(image[0]);
+        },
+          onMediaDelete : function(target) {
+          deleteImage(target[0].src);
+        }
+      }
+    });
+    $('.summernote3').summernote( {
+      height: 500,
+      callbacks: {
+          onImageUpload: function(image) {
+          uploadImage(image[0]);
+        },
+          onMediaDelete : function(target) {
+          deleteImage(target[0].src);
+        }
+      }
+    });
+
+    
+    var autonumeric = document.getElementsByClassName("autonumeric");
+    var autonumeric2 = document.getElementsByClassName("autonumeric2");
+    if ($('.autonumeric').length > 0) {
+      new AutoNumeric('.autonumeric', {
+          currencySymbol : ' ',
+          digitGroupSeparator : ',',
+          decimalPlaces	: '0'
+      });
+
+    }
+    if ($('.autonumeric').length > 0) {
+      new AutoNumeric('.autonumeric2', {
+        currencySymbol : ' ',
+        digitGroupSeparator : ',',
+        decimalPlaces	: '0'
+      });
+    }
+
+ 
+    function uploadImage(image) {
+      console.log('test');
+      var data = new FormData();
+      data.append("image", image);
+      $.ajax({
+        url: "<?php echo base_url(); ?>Project/uploadImageSummernote",
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: data,
+        type: "POST",
+        success: function(url) {
+          $('.summernote2').summernote("insertImage", url);
+        },
+        error: function(data) {
+          console.log(data);
+        }
+      });
+    }
+
+    function deleteImage(src) {
+      $.ajax({
+        data: {src : src},
+        type: "POST",
+        url: "<?php echo base_url(); ?>Project/deleteImageSummernote",
+        cache: false,
+        success: function(response) {
+          console.log(response);
+        }
+      });
+    }
+  }); // End Document Ready Function
+
+
+</script>
+<?php if ($this->session->flashdata('error')): ?>
+<script>
+  swal(
+    "Oops!", "<?=$this->session->flashdata('error')?>", "error"
+  )
+</script>
+<?php endif; ?>
+
+<?php if ($this->session->flashdata('success')): ?>
+<script>
+  swal(
+  "Yeayy!", "<?=$this->session->flashdata('success')?>", "success"
+  )
+</script>
+<?php endif; ?>
+</body>
+</html>
