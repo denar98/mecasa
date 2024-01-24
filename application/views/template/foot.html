@@ -51,26 +51,26 @@
 
 <script type="text/javascript">
   $(document).ready(function(e){
-    $.ajax({
-      type: "POST",
-      url: "<?php echo site_url('Attendance/getAttendanceToday/')?>",
-      data: {user_id: "<?=$this->session->userdata('user_id')?>"},
-      success: function (response) {
-        var row = JSON.parse(response);
+    // $.ajax({
+    //   type: "POST",
+    //   url: "<?php echo site_url('Attendance/getAttendanceToday/')?>",
+    //   data: {user_id: "<?=$this->session->userdata('user_id')?>"},
+    //   success: function (response) {
+    //     var row = JSON.parse(response);
 
-        if(row == null || row == ''){
-          $('#btn-check-in').show();
-        }
+    //     if(row == null || row == ''){
+    //       $('#btn-check-in').show();
+    //     }
 
-        if(row.check_out == null){
-          $('#btn-check-out').show();
-        }else{
-          $('#btn-check-in').hide();
-          $('#btn-check-out').hide();
-        }
+    //     if(row.check_out == null){
+    //       $('#btn-check-out').show();
+    //     }else{
+    //       $('#btn-check-in').hide();
+    //       $('#btn-check-out').hide();
+    //     }
 
-      }
-    });
+    //   }
+    // });
 
     $('.select2').select2();
     // $('.trumbowyg').trumbowyg();
@@ -113,8 +113,16 @@
       });
 
     }
+    
     if ($('.autonumeric').length > 0) {
       new AutoNumeric('.autonumeric2', {
+        currencySymbol : ' ',
+        digitGroupSeparator : ',',
+        decimalPlaces	: '0'
+      });
+    }
+    if ($('.autonumeric').length > 0) {
+      new AutoNumeric('.autonumeric3', {
         currencySymbol : ' ',
         digitGroupSeparator : ',',
         decimalPlaces	: '0'

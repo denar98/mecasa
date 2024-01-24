@@ -14,7 +14,7 @@
         <div class="card">
           <div class="card-header">
             <h5 class="float-left">Data Quotation</h5>
-            <button type="button" class="btn btn-secondary float-right" name="button" data-toggle="modal" data-target="#addModal">Tambah Quotation</button>
+            <a href="<?=base_url()?>Quotation/createQuotation"><button type="button" class="btn btn-secondary float-right" name="button">Tambah Quotation</button></a>
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -35,33 +35,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <?php
-                  foreach($quotations as $quotation){
-
-                  ?>
-                  <tr>
-                    <td><?=$quotation->quotation_name?></td>
-                    <td><?=$quotation->quotation_phone?></td>
-                    <td><?=$quotation->quotation_address?></td>
-                    <td><?=$quotation->quotation_interest?></td>
-                    <td><?=$quotation->quotation_class?></td>
-                    <!-- <td>
-                      <div class="form-group">
-                        <select class="form-control" name="quotation_status" required>
-                          <option value="Meet" <?php if($quotation->quotation_status=="Meet"){echo "selected";}?>>Meet</option>
-                          <option value="Quotation" <?php if($quotation->quotation_status=="Quotation"){echo "selected";}?>>Quotation</option>
-                          <option value="Deal" <?php if($quotation->quotation_status=="Deal"){echo "selected";}?>>Deal</option>
-                          <option value="No Deal" <?php if($quotation->quotation_status=="No Deal"){echo "selected";}?>>No Deal</option>
-                        </select>
-                      </div>
-        
-                    </td> -->
-                    <td>
-                      <a href="#" class="btn btn-warning mr-1" onclick="getQuotation('<?=$quotation->quotation_id?>')" data-toggle="modal" data-target="#updateModal" title="Edit"><i class="fa fa-pencil"></i></a>
-                      <a href="<?=base_url()?>Quotation/deleteAction/<?=$quotation->quotation_id?>" class="btn btn-danger mr-1" title="Hapus"><i class="fa fa-trash"></i></a>
-                    </td>
-                  </tr>
-                  <?php } ?>
+                 
                 </tbody>
 
               </table>
@@ -87,46 +61,62 @@
         </div>
         <div class="modal-body">
           <div class="theme-form">
-              <div class="form-group">
-                <label class="col-form-label">Nama Klien</label>
-                <input class="form-control" name="quotation_name" type="text" required>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="col-form-label">No Quotation</label>
+                  <input class="form-control" name="quotation_number" type="text" required>
+                </div>
               </div>
-              <div class="form-group">
-                <label class="col-form-label">No Handphone</label>
-                <input class="form-control" name="quotation_phone" type="text" required>
-              </div>
-              <div class="form-group">
-                <label class="col-form-label">Alamat</label>
-                <textarea name="quotation_address" class="form-control"></textarea>
-              </div>
-              <div class="form-group">
-                <label class="col-form-label">Ketertarikan</label>
-                <select name="quotation_interest" class="form-control">
-                  <option value="Desain">Desain</option>
-                  <option value="Produksi">Produksi</option>
-                  <option value="Desain + Produksi">Desain + Produksi</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="col-form-label">Kelas</label>
-                <select class="form-control" name="quotation_class" required>
-                  <option value="C">C</option>
-                  <option value="B">B</option>
-                  <option value="A">A</option>
-                  <option value="Super">Super</option>
-                </select>
-              </div>
-              <!-- <div class="form-group">
-                <label class="col-form-label">Status</label>
-                <select class="form-control" name="quotation_status" required>
-                  <option value="Chat">Chat</option>
-                  <option value="Online Meet">Online Meet</option>
-                  <option value="Checksite">Checksite</option>
-                  <option value="Quotation">Quotation</option>
-                  <option value="Deal">Deal</option>
-                  <option value="No Deal">No Deal</option>
-                </select>
+              <!-- <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">Tanggal Kirim</label>
+                  <input class="form-control" name="quotation_sent_date" type="text" value="<?=Date('Y-m-d')?>" readonly required>
+                </div>
               </div> -->
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Nama Klien</label>
+                  <!-- <input class="form-control" type="text" placeholder="Project name *"> -->
+                  <select name="client_id" class="form-control" required>
+                  <?php
+                  foreach($clients as $client){
+  
+                  ?>
+                  <option value="<?=$client->client_id?>"><?=$client->client_name?></option>
+
+                  <?php } ?>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Tipe Project</label>
+                  <select name="project_type" class="form-control" required>
+                  <option value="Design">Design</option>
+                  <option value="Produksi">Produksi</option>
+                  </select>                            
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="col-form-label">Nominal</label>
+                  <input class="form-control digits autonumeric" type="text" name="quotation_nominal" required autocomplete="off">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">Diskon</label>
+                  <input class="form-control digits autonumeric" type="text" name="quotation_discount" autocomplete="off">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">Cashback</label>
+                  <input class="form-control digits autonumeric" type="text" name="quotation_cashback" autocomplete="off">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -235,44 +225,39 @@
 <script>
 
   $(document).ready(function(e){
-    var base_url = "<?php echo base_url();?>"; // You can use full url here but I prefer like this
     
+    var base_url = "<?php echo base_url();?>"; // You can use full url here but I prefer like this
     $('#quotation-table').DataTable({
        "pageLength" : 10,
+       "serverSide": true,
+       "order": [[0, "asc" ]],
+       "ajax":{
+          url :  base_url+'Quotation/getAllQuotation',
+          type : 'POST'
+        },
     }); // End of DataTable
-
-    // var base_url = "<?php echo base_url();?>"; // You can use full url here but I prefer like this
-    // $('#user-table').DataTable({
-    //    "pageLength" : 10,
-    //    "serverSide": true,
-    //    "order": [[0, "asc" ]],
-    //    "ajax":{
-    //             url :  base_url+'Quotation/getAllQuotation',
-    //             type : 'POST'
-    //           },
-    // }); // End of DataTable
 
 
   }); // End Document Ready Function
 
-  function getQuotation(quotation_id){
-    var quotation_id = quotation_id;
-    $.ajax({
-      type: "POST",
-      url: "<?php echo site_url('Quotation/getQuotation');?>",
-      data: "quotation_id="+quotation_id,
-      success: function (response) {
-        var row = JSON.parse(response);
-        $('#quotation_id').val(row.quotation_id);
-        $('#quotation_name').val(row.quotation_name);
-        $('#quotation_phone').val(row.quotation_phone);
-        $('#quotation_address').val(row.quotation_address);
-        $('#quotation_interest').val(row.quotation_interest);
-        $("select#quotation_class option[value='"+row.quotation_class+"']").prop("selected","selected");
-        $("select#quotation_status option[value='"+row.quotation_status+"']").prop("selected","selected");
+  // function getQuotation(quotation_id){
+  //   var quotation_id = quotation_id;
+  //   $.ajax({
+  //     type: "POST",
+  //     url: "<?php echo site_url('Quotation/getQuotation');?>",
+  //     data: "quotation_id="+quotation_id,
+  //     success: function (response) {
+  //       var row = JSON.parse(response);
+  //       $('#quotation_id').val(row.quotation_id);
+  //       $('#quotation_name').val(row.quotation_name);
+  //       $('#quotation_phone').val(row.quotation_phone);
+  //       $('#quotation_address').val(row.quotation_address);
+  //       $('#quotation_interest').val(row.quotation_interest);
+  //       $("select#quotation_class option[value='"+row.quotation_class+"']").prop("selected","selected");
+  //       $("select#quotation_status option[value='"+row.quotation_status+"']").prop("selected","selected");
 
-      }
-    });
-  }
+  //     }
+  //   });
+  // }
 
 </script>

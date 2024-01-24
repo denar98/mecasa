@@ -1,0 +1,389 @@
+
+<div class="page-body">
+  <div class="container-fluid">
+    <div class="page-title">
+      <div class="row">
+      </div>
+    </div>
+  </div>
+  <!-- Container-fluid starts-->
+  <div class="container-fluid">
+    <form class="" action="<?=base_url()?>Quotation/updateAction" method="post">
+    <div class="row">
+      <!-- Ajax data source array start-->
+      <div class="col-sm-8">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="float-left">Quotation Detail</h5>
+            <!-- <a href="<?=base_url()?>Quotation/createQuotation"><button type="button" class="btn btn-secondary float-right" name="button">Tambah Quotation</button></a> -->
+          </div>
+          <div class="card-body">
+            <div class="theme-form">
+              <div class="row">
+                <!-- <div class="col-md-12"><h6>Quotation Detail</h6></div> -->
+                
+                <!-- <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="col-form-label">Tanggal Kirim</label>
+                    <input class="form-control" name="quotation_sent_date" type="text" value="<?=Date('Y-m-d')?>" readonly required>
+                  </div>
+                </div> -->
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-form-label">No Quotation</label>
+                    <input class="form-control" name="quotation_id" type="hidden" required value="<?=$quotation->quotation_id?>">
+                    <input class="form-control" name="quotation_number" type="text" required readonly value="<?=$quotation->quotation_number?>">
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-form-label">Nama Project</label>
+                    <input class="form-control" name="project_name" type="text" required value="<?=$quotation->project_name?>">
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Nama Klien</label>
+                    <!-- <input class="form-control" type="text" placeholder="Project name *"> -->
+                    <select name="client_id" class="form-control" required>
+                    <?php
+                    foreach($clients as $client){
+    
+                    ?>
+                    <option value="<?=$client->client_id?>" <?php if($client->client_id==$quotation->client_id){echo "selected";} ?>><?=$client->client_name?></option>
+
+                    <?php } ?>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Tipe Project</label>
+                    <select name="project_type" class="form-control" required>
+                    <option value="Design" <?php if($quotation->project_type == "Design"){echo "selected";} ?>>Design</option>
+                    <option value="Produksi" <?php if($quotation->project_type == "Produksi"){echo "selected";} ?>>Produksi</option>
+                    </select>                            
+                  </div>
+                </div>
+               
+                
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <hr class="mb-4">
+                  <h6 class="mt-3">Quotation Item</h6>
+                  <div class="table-responsive mt-3">  
+                    <button type="button" name="add" id="add" class="btn btn-success float-right mr-4 mb-2"  style="padding-left:12px; padding-right:12px;">+</button>
+                    <table class="table table-bordered" id="dynamic_field">  
+                      <?php 
+                        $i=0;
+                        foreach($quotation_details as $quotation_detail){
+                          $i++;
+                      ?>
+                        <tr id="row<?=$i?>" class="dynamic-added">  
+                            <td>
+                              <div class="form-group">
+                                <label>Item</label>
+                                <input type="text" name="quotation_item[]" class="form-control" value="<?=$quotation_detail->quotation_item?>" required="" />
+                              </div>
+                            </td>  
+                            <td>
+                              <div class="form-group">
+                                <label>Size</label>
+                                <input type="text" name="quotation_size[]" class="form-control" value="<?=$quotation_detail->quotation_size?>" required="" />
+                              </div>
+                            </td>  
+                            <td>
+                              <div class="form-group">
+                                <label>Price</label>
+                                <input type="text" name="quotation_price[]" class="form-control  quotation_price autonumeric<?=$i?>" value="<?=$quotation_detail->quotation_price?>" onkeyup="calculatePrice(this)" id="quotation_price"  value="0" required="" />
+                              </div>
+                            </td>  
+                            <td style="width: 5%; vertical-align: middle;"><button type="button" name="remove" id="<?=$i?>" class="btn btn-danger btn_remove" style="padding-left:12px; padding-right:12px;">x</button></td>  
+                        </tr>  
+                        <?php } ?>
+                    </table>  
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="card"  style="min-height: 630px;">
+          <div class="card-header">
+            <h5 class="float-left">Quotation Nominal</h5>
+            <!-- <a href="<?=base_url()?>Quotation/createQuotation"><button type="button" class="btn btn-secondary float-right" name="button">Tambah Quotation</button></a> -->
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-12" style="display: none;">
+                <div class="form-group">
+                  <label class="col-form-label">Nominal</label>
+                  <input class="form-control" type="text" name="quotation_nominal" id="quotation_nominal" readonly required autocomplete="off" value="<?=$quotation->quotation_nominal?>">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">Diskon</label>
+                  <input class="form-control digits autonumeric" type="text" name="quotation_discount" id="quotation_discount"  autocomplete="off" value="<?=$quotation->quotation_discount?>">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">Cashback</label>
+                  <input class="form-control digits autonumeric2" type="text" name="quotation_cashback" autocomplete="off" value="<?=$quotation->quotation_cashback?>">
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="col-form-label">Status</label>
+                  <select class="form-control" name="quotation_status" id="quotation_status">
+                    <option value="Waiting">Waiting</option>
+                    <option value="Deal">Deal</option>
+                    <option value="No Deal">No Deal</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row" id="div_deal_form" style="display:none;">
+              <div class="col-sm-6">
+                <div class="form-group">
+                    <label>PIC Project</label>
+                    <select name="user_id" class="form-control">
+                        <?php
+                        foreach($users as $user){
+        
+                        ?>
+                        <option value="<?=$user->user_id?>"><?=$user->user_fullname?></option>
+    
+                        <?php } ?>
+                    </select>                            
+                </div>
+              </div> 
+              <div class="col-sm-6">
+                <div class="form-group">
+                    <label>Estimasi Profit</label>
+                    <input class="form-control digits autonumeric-profit"  type="text" name="profit_estimation" autocomplete="off">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                  <div class="form-group">
+                      <label>Mulai Project</label>
+                      <input class="datepicker-here form-control digits" type="text" data-language="en" name="start_date" autocomplete="off">
+                      <!-- <input class="form-control" type="text" name="project_name" placeholder="Nama Project*" required> -->
+                  </div>
+              </div>
+              <div class="col-sm-6">
+                  <div class="form-group">
+                      <label>Deadline Project</label>
+                      <input class="datepicker-here form-control digits" type="text" data-language="en" name="deadline" autocomplete="off">
+                      <!-- <input class="form-control" type="text" name="project_name" placeholder="Nama Project*" required> -->
+                  </div>
+              </div>
+          
+            </div> 
+            
+            <div class="table-responsive">  
+              <table class="table" id="dynamic_field">
+                <tr>
+                  <td><h6>Subotal</h6></td>
+                  <td><h7 id="h-subtotal" class="float-right"><?=number_format($quotation->quotation_nominal)?></h7></td>
+                </tr>
+                <tr>
+                  <td><h6>Diskon</h6></td>
+                  <td><h7 id="h-discount" class="float-right"><?=number_format($quotation->quotation_discount)?></h7></td>
+                </tr>
+                <tr>
+                  <td><h6>Grand Total</h6></td>
+                  <td><h7 id="h-total" class="float-right"><?=number_format($quotation->quotation_nominal - $quotation->quotation_discount)?></h7></td>
+                </tr>
+              </table>
+            </div>
+            <div class="row" style="margin-top:145px">
+              <div class="col-md-12">
+                <div class="form-group mb-0 pull-right">
+                  <a href="<?=base_url()?>Quotation"><button type="button" class="btn btn-warning">Batal</button></a>
+                  <button type="submit" class="btn btn-secondary" >Simpan</button>
+                </div>    
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Ajax data source array end-->
+    </div>
+  </form>
+  </div>
+  <!-- Container-fluid Ends-->
+</div>
+
+<script>
+
+  $(document).ready(function(e){
+    var base_url = "<?php echo base_url();?>"; // You can use full url here but I prefer like this
+    if ($('.autonumeric').length > 0) {
+      new AutoNumeric('.autonumeric1', {
+          currencySymbol : ' ',
+          digitGroupSeparator : ',',
+          decimalPlaces	: '0'
+      });
+    }
+    if ($('.autonumeric').length > 0) {
+      new AutoNumeric('.autonumeric-profit', {
+          currencySymbol : ' ',
+          digitGroupSeparator : ',',
+          decimalPlaces	: '0'
+      });
+    }
+    $('#quotation-table').DataTable({
+       "pageLength" : 10,
+    }); // End of DataTable
+
+    var i=1;  
+    var o=3;
+  //  $('.quotation_price').keyup(function(){  
+  //   var quotation_price = $(this).val();
+  //   console.log(quotation_price);
+  //  });
+   $('#add').click(function(){  
+        i++;  
+        o++;
+        var new_row = '<tr id="row'+i+'" class="dynamic-added">'+
+          '<td>'+
+            '<div class="form-group">'+
+              '<label>Item</label>'+
+              '<input type="text" name="quotation_item[]" class="form-control" required="" />'+
+            '</div>'+
+          '</td>  '+
+          '<td>'+
+            '<div class="form-group">'+
+              '<label>Ukuran</label>'+
+              '<input type="text" name="quotation_size[]" class="form-control" required="" />'+
+            '</div>'+
+          '</td>'+  
+          '<td>'+
+            '<div class="form-group">'+
+              '<label>Harga</label>'+
+              '<input type="text" name="quotation_price[]" class="form-control quotation_price autonumeric'+o+'" onkeyup="calculatePrice(this)" value="0" required="" />'+
+            '</div>'+
+          '</td>'+  
+          '<td style="width: 5%; vertical-align: middle;">'+
+            '<div class="form-group">'+
+              '<button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove" style="padding-left:12px; padding-right:12px;">x</button>'+
+            '</div>'+
+          '</td>';  
+
+        $('#dynamic_field').append(new_row);  
+        if ($('.autonumeric').length > 0) {
+            new AutoNumeric('.autonumeric'+o, {
+                currencySymbol : ' ',
+                digitGroupSeparator : ',',
+                decimalPlaces	: '0'
+            });
+
+          }
+   });
+   $('#quotation_discount').keyup(function(){  
+    var quotation_discount = $('#quotation_discount').val().replace(/,/g, "");
+    $('#h-discount').html(new Intl.NumberFormat('en-ID').format(quotation_discount));
+    var nominal =  $('#quotation_nominal').val().replace(/,/g, "");
+    var total = nominal - quotation_discount;
+    $('#h-total').html(new Intl.NumberFormat('en-ID').format(total));
+
+   });
+   $("#quotation_status").change(function(){
+    var quotation_status =  $(this).val();
+    if(quotation_status == 'Deal'){
+      $('#div_deal_form').show();
+    }
+    else{
+      $('#div_deal_form').hide();
+    }
+  });
+
+   $(document).on('click', '.btn_remove', function(){  
+        var button_id = $(this).attr("id");   
+        $('#row'+button_id+'').remove();  
+
+        var quotation_prices = [];
+        $('.quotation_price').each(function () {
+          var quotation_price_each = $(this).val().replace(/,/g, "");
+          quotation_prices.push(quotation_price_each);
+        });
+
+        sum = 0;
+        $.each(quotation_prices,function(){sum+=parseFloat(this) || 0;});
+
+        $('#quotation_nominal').val(new Intl.NumberFormat('en-ID').format(sum));
+        $('#h-subtotal').html(new Intl.NumberFormat('en-ID').format(sum));
+        // console.log(quotation_prices);
+        // console.log(sum);
+        var quotation_discount = $('#quotation_discount').val().replace(/,/g, "");
+        if(quotation_discount<=0){
+          $('#h-total').html(new Intl.NumberFormat('en-ID').format(sum));
+        }else{
+          var nominal =  $('#quotation_nominal').val().replace(/,/g, "");
+          var total = nominal - quotation_discount;
+          $('#h-total').html(new Intl.NumberFormat('en-ID').format(total));
+
+        }
+   });  
+
+
+  }); // End Document Ready Function
+
+
+  function calculatePrice(e){
+    var quotation_price = e.value.replace(/,/g, "");
+    var quotation_prices = [];
+    $('.quotation_price').each(function () {
+      var quotation_price_each = $(this).val().replace(/,/g, "");
+      quotation_prices.push(quotation_price_each);
+    });
+
+    // var sum = quotation_prices.reduce(function(a, b){
+    //   return parseInt(a) + parseInt(b);
+    // });
+
+    sum = 0;
+    $.each(quotation_prices,function(){sum+=parseFloat(this) || 0;});
+
+    $('#quotation_nominal').val(new Intl.NumberFormat('en-ID').format(sum));
+    $('#h-subtotal').html(new Intl.NumberFormat('en-ID').format(sum));
+    // console.log(quotation_prices);
+    // console.log(sum);
+    var quotation_discount = $('#quotation_discount').val().replace(/,/g, "");
+    if(quotation_discount<=0){
+      $('#h-total').html(new Intl.NumberFormat('en-ID').format(sum));
+    }else{
+      var nominal =  $('#quotation_nominal').val().replace(/,/g, "");
+      var total = nominal - quotation_discount;
+      $('#h-total').html(new Intl.NumberFormat('en-ID').format(total));
+
+    }
+
+  };
+
+  function getQuotation(quotation_id){
+    var quotation_id = quotation_id;
+    $.ajax({
+      type: "POST",
+      url: "<?php echo site_url('Quotation/getQuotation');?>",
+      data: "quotation_id="+quotation_id,
+      success: function (response) {
+        var row = JSON.parse(response);
+        $('#quotation_id').val(row.quotation_id);
+        $('#quotation_name').val(row.quotation_name);
+        $('#quotation_phone').val(row.quotation_phone);
+        $('#quotation_address').val(row.quotation_address);
+        $('#quotation_interest').val(row.quotation_interest);
+        $("select#quotation_class option[value='"+row.quotation_class+"']").prop("selected","selected");
+        $("select#quotation_status option[value='"+row.quotation_status+"']").prop("selected","selected");
+
+      }
+    });
+  }
+
+</script>

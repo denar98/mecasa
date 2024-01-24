@@ -59,7 +59,7 @@
                             </div>                
                         </div>
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>PIC Project</label>
                                     <select name="user_id" class="form-control" required>
@@ -68,6 +68,21 @@
                         
                                         ?>
                                         <option value="<?=$user->user_id?>"  <?php if($client->user_id == $project->user_id){echo "selected";}?>><?=$user->user_fullname?></option>
+                    
+                                        <?php } ?>
+                                    </select>                            
+                                </div>
+                            </div>                  
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>No Quotation</label>
+                                    <select name="quotation_number" class="form-control" required>
+                                        <option value="">-</option>
+                                        <?php
+                                        foreach($quotations as $quotation){
+                        
+                                        ?>
+                                        <option value="<?=$quotation->quotation_number?>"  <?php if($quotation->project_id == $project->project_id){echo "selected";}?>><?=$quotation->project_name?> - <?=$quotation->quotation_number?></option>
                     
                                         <?php } ?>
                                     </select>                            

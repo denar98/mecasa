@@ -108,8 +108,8 @@ class User extends CI_Controller {
                 $rows->user_fullname,
                 $rows->role,
                 $rows->last_login,
-                '<a href="#" class="btn btn-warning mr-1" onclick="getUser('.$rows->user_id.')" data-toggle="modal" data-target="#updateModal" title="Edit"><i class="fa fa-pencil"></i></a>
-                 <a href="'.base_url().'User/deleteAction/'.$rows->user_id.'" class="btn btn-danger mr-1" title="Hapus"><i class="fa fa-trash"></i></a>'
+                '<a href="#" class="btn btn-warning mr-1 mt-1" title="Edit" style="padding-left:15px; padding-right:15px;" onclick="getUser('.$rows->user_id.')" data-toggle="modal" data-target="#updateModal" title="Edit"><i class="fa fa-pencil"></i></a>
+                 <a href="'.base_url().'User/deleteAction/'.$rows->user_id.'" class="btn btn-danger mr-1 mt-1" title="Edit" style="padding-left:15px; padding-right:15px;" title="Hapus"><i class="fa fa-trash"></i></a>'
             );
         }
         $total_users = $this->totalUsers();

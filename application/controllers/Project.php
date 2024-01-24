@@ -81,6 +81,7 @@ class Project extends CI_Controller {
     $data['project'] =  $this->custom_model->getDetailDataProject($project_id)->row();
     $data['clients'] = $this->db->get("clients")->result();
     $data['users'] = $this->db->get("users")->result();
+    $data['quotations'] = $this->db->get("quotations")->result();
 
 		$this->load->view('template/head.html');
 		$this->load->view('project/edit.html',$data);
@@ -468,6 +469,7 @@ class Project extends CI_Controller {
   public function updateAction()
   {
     $project_id = $this->input->post('project_id');
+    $quotation_number = $this->input->post('quotation_number');
     $project_detail_id = $this->input->post('project_detail_id');
     $project_name = $this->input->post('project_name');
     $client_id = $this->input->post('client_id');
@@ -488,6 +490,10 @@ class Project extends CI_Controller {
       'project_name' => $project_name,
       'client_id' => $client_id,
       'project_date' => $project_date,
+    );
+    $data_quotation = array(
+      'project_id' => $project_id,
+      'quotation_status' => 'Deal',
     );
 
     $data_detail_project = array(
@@ -545,6 +551,8 @@ class Project extends CI_Controller {
     if($update_project){
       $where_detail_project="project_detail_id=".$project_detail_id;
       $update_detail_project = $this->crud_model->updateData('project_details',$data_detail_project,$where_detail_project);
+      $where_quotation="quotation_number='".$quotation_number."'";
+      $update_quotations = $this->crud_model->updateData('quotations',$data_quotation,$where_quotation);
       $this->session->set_flashdata("success", "Your Data Has Been Updated !");
       redirect('Project/');
     }
@@ -666,9 +674,10 @@ class Project extends CI_Controller {
     $project_id = $this->input->post('project_id');
     $project_detail_id = $this->input->post('project_detail_id');
     $financial_note = $this->input->post('financial_note');
-    $financial_date = $this->input->post('financial_date');
+    $financial_date = $this->input->post('financial_date').' '.Date('H:i:s');
     $financial_ops_type = $this->input->post('financial_ops_type');
     $financial_type = $this->input->post('financial_type');
+    $financial_in_type = $this->input->post('financial_in_type');
     $financial_nominal =  str_replace( ',', '', $this->input->post('financial_nominal'));
     $financial_pic = $this->input->post('financial_pic');
 
@@ -751,6 +760,7 @@ class Project extends CI_Controller {
             'financial_note' => $financial_note_mecasa,
             'financial_date' => $financial_date,
             'financial_type' => $financial_type_mecasa,
+            'financial_out_type' => $financial_in_type,
             'financial_nominal' => $financial_nominal,
             'financial_pic' => $financial_pic,
             'financial_saldo' => $financial_saldo,
@@ -771,9 +781,11 @@ class Project extends CI_Controller {
     $project_id = $this->input->post('project_id');
     $project_detail_id = $this->input->post('project_detail_id');
     $financial_note = $this->input->post('financial_note');
-    $financial_date = $this->input->post('financial_date');
+    $financial_date = $this->input->post('financial_date').' '.Date('H:i:s');
     $financial_ops_type = $this->input->post('financial_ops_type');
     $financial_type = $this->input->post('financial_type');
+    $financial_type = $this->input->post('financial_type');
+    $financial_in_type = $this->input->post('financial_in_type');
     $financial_nominal =  str_replace( ',', '', $this->input->post('financial_nominal'));
     $financial_pic = $this->input->post('financial_pic');
 
@@ -872,6 +884,7 @@ class Project extends CI_Controller {
             'financial_note' => $financial_note_mecasa,
             'financial_date' => $financial_date,
             'financial_type' => $financial_type_mecasa,
+            'financial_out_type' => $financial_in_type,
             'financial_nominal' => $financial_nominal,
             'financial_pic' => $financial_pic,
             'financial_saldo' => $financial_saldo,
@@ -937,6 +950,14 @@ class Project extends CI_Controller {
     $where = "project_financials_id=".$project_financials_id;
     $financial_history = $this->custom_model->getHistoryFinancialById($project_financials_id)->row();
     echo json_encode($financial_history);
+
+  }
+  public function getQuotationByProjectId()
+  {
+    $project_id = $this->input->post('project_id');
+    $where = "project_id=".$project_id;
+    $quotation = $this->custom_model->getQuotationByProjectId($project_id)->row();
+    echo json_encode($quotation);
 
   }
 

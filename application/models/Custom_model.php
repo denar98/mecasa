@@ -13,6 +13,52 @@ class Custom_model extends CI_Model
     return $query;
 
   }
+  public function getQuotation()
+  {
+
+    $query = $this->db->select('clients.*,quotations.*')
+             ->from('clients')
+             ->join("quotations","clients.client_id = quotations.client_id")
+             ->get();
+    return $query;
+
+  }
+  
+  public function getQuotationById($quotation_id)
+  {
+
+    $query = $this->db->select('clients.*,quotations.*')
+             ->from('clients')
+             ->join("quotations","clients.client_id = quotations.client_id")
+             ->where('quotation_id',$quotation_id)
+             ->get();
+    return $query;
+
+  }
+  public function getQuotationByProjectId($project_id)
+  {
+
+    $query = $this->db->select('clients.*,quotations.*,projects.*')
+             ->from('quotations')
+             ->join("clients","clients.client_id = quotations.client_id")
+             ->join("projects","projects.project_id = quotations.project_id")
+             ->where('quotations.project_id',$project_id)
+             ->get();
+    return $query;
+
+  }
+  public function getQuotationDetails($quotation_id)
+  {
+
+    $query = $this->db->select('clients.*,quotations.*,quotation_details.*')
+             ->from('clients')
+             ->join("quotations","clients.client_id = quotations.client_id")
+             ->join("quotation_details","quotation_details.quotation_id = quotations.quotation_id")
+             ->where('quotation_details.quotation_id',$quotation_id)
+             ->get();
+    return $query;
+
+  }
   public function getTodayClientMeeting()
   {
 

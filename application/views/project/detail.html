@@ -22,6 +22,7 @@
                     </select>
                     <button style="padding: 0.45rem 1.75rem;" type="button" class="btn btn-primary float-right" name="button" data-toggle="modal" data-target="#addHistoryModal">Tambah History Keuangan</button>
                     <a href="<?=base_url()?>Project/edit/<?=$project->project_id?>"> <button style="padding: 0.45rem 1.75rem;" type="button" class="btn btn-warning float-right mr-3" name="button" >Edit Project</button></a>
+                    <button style="padding: 0.45rem 1.75rem;" type="button" class="btn btn-secondary float-right mr-3" name="button" data-toggle="modal" data-target="#addInvoiceModal">Invoice</button>
                   </div>
                   <div class="card-body">
                     <div class="tab-content" id="top-tabContent">
@@ -80,7 +81,7 @@
                                 <!-- <span class="btn btn-primary btn-xs mb-3 text-white"> Project Timeline</span> -->
                                 <p>Tanggal Masuk  <span class="pull-right font-weight-bold"><?=date_format(date_create($project->start_date),"d M Y") ?></span></p>
                                 <p>Deadline  <span class="pull-right  font-weight-bold"><?=date_format(date_create($project->deadline),"d M Y") ?></span></p>
-                                <div class="tick" data-did-init="handleTickInit">
+                                <p class="float-left">Due In</p><div class="tick" data-did-init="handleTickInit" style="width: 45%; float:right;">
                               
                                     <div data-repeat="true"
                                           data-layout="horizontal center fit"
@@ -138,7 +139,7 @@
                                     ?>
                                     <div class="activity-dot-<?=$btn_color?>" style="margin-top:18px;"></div>
                                     <li class="list-group-item" style="margin-top:-31px; margin-left:10px;">
-                                      <a  data-toggle="modal" data-target="#editHistoryModal" style="cursor: pointer;" onclick="updateHistoryFinancial('<?=$financial->project_financials_id?>')"><p style="font-weight: bold; margin-bottom:0px;"> Rp. <?=number_format($financial->financial_nominal)?> - <span style="font-weight: 300;"><?=$financial->financial_type?></span>  </p></a>
+                                      <a  data-toggle="modal" data-target="#editHistoryModal" style="cursor: pointer;" onclick="updateHistoryFinancial('<?=$financial->project_financials_id?>')"><p style="font-weight: bold; margin-bottom:0px;"> Rp. <?=number_format($financial->financial_nominal)?> - <span style="font-weight: 300;"><?=$financial->financial_type?></span> </p></a>
                                       <a  data-toggle="modal" data-target="#photoHistoryModal" style="cursor: pointer;" onclick="photoHistoryFinancial('<?=$financial->project_financials_id?>')"><p style="margin-top:0px;"><?=date_format(date_create($financial->financial_date),"d M Y") ?> | <?=$financial->financial_note?>  | <?=$financial->financial_pic?></p></a>
                                     </li>
                                   <?php } ?>
@@ -152,6 +153,106 @@
                               </div>
                             </div>
                           </div>
+
+                          <div class="quotation-div" id="quotation-div-print" style="width: 595px; height: 842px; position: relative; margin-left: auto; margin-right: auto; display: none;">
+                            <div class="row">
+                              <div class="col-md-12" style="background: url('<?=base_url()?>assets/images/asset-02.png'); background-position: right; background-size: cover; padding: 20px 60px; min-height: 280px;">
+                                <div class="row">
+                                  <div class="col-md-6">
+                                      <img class="image mt-3" src="<?=base_url()?>assets/images/asset-01.png" width="65%" alt="">
+                                  </div>
+                                  <div class="col-md-6 text-right pt-3">
+                                    <h5>mecasa studio</h5>
+                                    <h6>+62 821-3014-7417</h6>
+                                    <h7 style="font-size:12px;">Perumahan Bumi Sanggar Meubel 2
+                                      Blok A9, Cileunyi,Kab. Bandung</h7>
+                                  </div>
+                                  <div class="col-md-12 mt-2">
+                                    <h7>Project Name :</h7>
+                                    <h4><?=$project->project_name?></h4>
+                                  </div>
+                                  <div class="col-md-9 mt-2">
+                                    <table class="table table-client">
+                                      <tr>
+                                        <td style="border:none !important; width: 50px;"><p>Name</p></td>
+                                        <td style="border:none !important; width: 10px;"><p>:</p></td>
+                                        <td style="border:none !important"><p><?=$project->client_name?></p></td>
+                                      </tr>
+                                      <tr>
+                                        <td style="border:none !important"><p>Phone</p></td>
+                                        <td style="border:none !important"><p>:</p></td>
+                                        <td style="border:none !important"><p><?=$project->client_phone?></p></td>
+                                      </tr>
+                                      <tr>
+                                        <td style="border:none !important"><p>Address</p></td>
+                                        <td style="border:none !important"><p>:</p></td>
+                                        <td style="border:none !important"><p><?=$project->client_address?></p></td>
+                                      </tr>
+                                    </table>
+                                  </div>
+                                  <div class="col-md-3 mt-2 ">
+                                    <h7 class="float-right"><?=date_format(date_create(Date('Y-m-d')),"d/m/Y")?></h7>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row" style="padding: 25px 50px 0px 50px;">
+                              <div class="col-md-4">
+                                <h6>Invoice</h6>
+                                <p class="mt-3 mb-0">Invoice No.</p>
+                                <p id="invoice_number"></p>
+                              </div>
+                              <div class="col-md-8">
+                                <table class="table mb-1 table-item">
+                                  <tbody>
+                                    <tr>
+                                      <th style="width:50%"><p><b>Desc</b></p></th>
+                                      <th style="width:25%"><p><b>Price (Rp)</b></p></th>
+                                    </tr>
+                                  </tbody>
+                                </table>
+              
+                                <table class="table mb-1 table-item">
+                                  <tbody>
+
+                                    <tr>
+                                      <td style="width:50%"><p id="invoice_description"></p></td>
+                                      <td style="width:25%; text-align:right;"><p  id="invoice_price"></p></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                                <table class="table table-item" style="margin-top:100px;">
+                                  <tbody>
+                                    <tr>
+                                      <th style="width:75%"><p><b>Total</p></b></th>
+                                      <th style="width:25%; text-align:right;"><p><b id="invoice_total"></b></p></th>
+                                    </tr>
+                                   
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                            <div class="row" style="padding: 20px 50px ;position: absolute; bottom: 70px; width:100%;">
+                              <div class="col-md-12 list-term ">
+                                <h7 class="mb-1">Terms</h7>
+                                <ul>
+                                  <li><p>Project dikerjakan setelah pembayaran <b>termin I</b> atau DP sebesar <b>50%</b></p></li>
+                                  <li><p>Preview desain pertama akan dikirimkan maksimal 12 hari kerja setelah pembayaran down payment</p></li>
+                                  <li><p>Pembayaran <b>termin II</b> setelah preview pertama sebesar <b>30%</b>.</p></li>
+                                  <li><p>Revisi akan dikirimkan maksimal 9 hari kerja setelah feedback disampaikan di setiap tahapan preview/revisi desain</p></li>
+                                  <li><p>Pembayaran <b>termin III</b> (pelunasan) setelah revisi ke-3 atau desain telah selesai dikerjakan sebesar <b>20%</b></p></li>
+                                  <li><p>Final Draft berupa render, layout, isometric, gambar kerja dan rancangan anggaran biaya (RAB) dikirim maksimal 10 hari kerja setelah pelunasan</p></li>
+                                </ul>
+                              </div>
+                              <div class="col-md-12 mt-3">
+                                <h7>BCA a.n. Alfian Tito Sadewo</h7>
+                                <p>8105208827</p>
+                              </div>
+                            </div>
+                            <div class="row mt-1" style="position: absolute; bottom: 0; left:15px; width: 100%;">
+                              <div class="col-md-12" style="background: url('<?=base_url()?>assets/images/asset-03.png'); background-size: cover; background-position: left; height: 60px;"></div>
+                            </div>
+                          </div>
                         </div>
                         
                       </div>
@@ -163,6 +264,47 @@
             </div>
           </div>
           <!-- Container-fluid Ends-->
+        </div>
+        <div class="modal fade" id="addInvoiceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <!-- <form class="" action="<?=base_url()?>Project/addProgressAction" method="post"> -->
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Terbitkan Invoice</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="theme-form">
+                      <div class="form-group">
+                        <input type="hidden" name="project_id" id="project_id" value="<?=$project->project_id?>">
+                        <input type="hidden" name="project_detail_id" id="project_detail_id" value="<?=$project->project_detail_id?>">
+                      </div>
+                      <div class="form-group">
+                        <label class="col-form-label">Jenis Invoice</label>
+                        <select class="form-control" name="invoice_type" id="invoice_type" required>
+                          <option value="Down Payment">Down Payment</option>
+                          <option value="Termin 2">Termin 2</option>
+                          <option value="Pelunasan">Pelunasan</option>
+                          <option value="Retensi">Retensi</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Nominal Invoice</label>
+                        <input type="text" class="form-control digits autonumeric3" name="invoice_nominal" id="invoice_nominal">
+                      </div>
+                      
+
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-warning" data-dismiss="modal">Batal</button>
+                  <button type="button" id="btn-invoice" onclick="addInvoice('<?=$project->project_id?>')" class="btn btn-secondary">Simpan</button>
+                </div>
+              <!-- </form> -->
+            </div>
+          </div>
         </div>
         <div class="modal fade" id="addProgressModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg" role="document">
@@ -280,7 +422,7 @@
                       </div>
                       <div class="form-group">
                         <label class="col-form-label">Jenis History Keuangan</label>
-                        <select class="form-control" name="financial_ops_type" required>
+                        <select class="form-control" name="financial_ops_type" id="financial_ops_type_add" required>
                           <option value="">-</option>
                           <option value="Operasional Project">Operasional Project</option>
                           <option value="Operasional Mecasa">Operasional Mecasa</option>
@@ -288,11 +430,15 @@
                       </div>
                       <div class="form-group">
                         <label class="col-form-label">Tipe History Keuangan</label>
-                        <select class="form-control" name="financial_type" required>
+                        <select class="form-control" name="financial_type" id="financial_type_add" required>
                           <option value="">-</option>
                           <option value="Uang Keluar">Uang Keluar</option>
                           <option value="Uang Masuk">Uang Masuk</option>
                         </select>
+                      </div>
+                      <div class="form-group" id="div-financial-in-type" style="display:none;">
+                        <label class="col-form-label">Jenis Uang Keluar</label>
+                        <input class="form-control" type="text" name="financial_in_type" id="">
                       </div>
                       <div class="form-group">
                         <label>Keterangan</label>
@@ -360,6 +506,10 @@
                           <option value="Uang Masuk">Uang Masuk</option>
                         </select>
                       </div>
+                      <div class="form-group" id="div-financial-in-type-edit" style="display:none;">
+                        <label class="col-form-label">Jenis Uang Keluar</label>
+                        <input class="form-control" type="text" name="financial_in_type" id="financial_in_type_edit">
+                      </div>
                       <div class="form-group">
                         <label>Keterangan</label>
                         <input class="form-control" type="text" name="financial_note" id="financial_note_edit" required>
@@ -395,73 +545,74 @@
             </div>
           </div>
         </div>
-        
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+        <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+
         <script>
           $(document).ready(function(){
 
+            // var limit = 20;
+            // var start = 0;
+            // var action = 'inactive';
 
-            var limit = 20;
-            var start = 0;
-            var action = 'inactive';
+            // function lazzy_loader(limit)
+            // {
+            //   var output = '';
+            //   for(var count=0; count<limit; count++)
+            //   {
+            //     output += '<div class="post_data">';
+            //     output += '<p><span class="content-placeholder" style="width:100%; height: 30px;">&nbsp;</span></p>';
+            //     output += '<p><span class="content-placeholder" style="width:100%; height: 100px;">&nbsp;</span></p>';
+            //     output += '</div>';
+            //   }
+            //   // $('#top-home').html(output);
+            // }
 
-            function lazzy_loader(limit)
-            {
-              var output = '';
-              for(var count=0; count<limit; count++)
-              {
-                output += '<div class="post_data">';
-                output += '<p><span class="content-placeholder" style="width:100%; height: 30px;">&nbsp;</span></p>';
-                output += '<p><span class="content-placeholder" style="width:100%; height: 100px;">&nbsp;</span></p>';
-                output += '</div>';
-              }
-              // $('#top-home').html(output);
-            }
+            // lazzy_loader(limit);
 
-            lazzy_loader(limit);
+            // function load_data(limit, start)
+            // {
+            //   var project_detail_id = "<?=$project->project_detail_id;?>";
+            //   $.ajax({
+            //     url:"<?php echo base_url(); ?>Project/fetchProgress/"+project_detail_id,
+            //     method:"POST",
+            //     data:{limit:limit, start:start},
+            //     cache: false,
+            //     success:function(data)
+            //     {
+            //       if(data == '')
+            //       {
+            //         $('#load_data_message').html('<h7><i>No More Result Found</i></h7>');
+            //         action = 'active';
+            //       }
+            //       else
+            //       {
+            //         $('#activity-timeline').append(data);
+            //         $('#load_data_message').html("");
+            //         action = 'inactive';
+            //       }
+            //     }
+            //   })
+            // }
 
-            function load_data(limit, start)
-            {
-              var project_detail_id = "<?=$project->project_detail_id;?>";
-              $.ajax({
-                url:"<?php echo base_url(); ?>Project/fetchProgress/"+project_detail_id,
-                method:"POST",
-                data:{limit:limit, start:start},
-                cache: false,
-                success:function(data)
-                {
-                  if(data == '')
-                  {
-                    $('#load_data_message').html('<h7><i>No More Result Found</i></h7>');
-                    action = 'active';
-                  }
-                  else
-                  {
-                    $('#activity-timeline').append(data);
-                    $('#load_data_message').html("");
-                    action = 'inactive';
-                  }
-                }
-              })
-            }
+            // if(action == 'inactive')
+            // {
+            //   action = 'active';
+            //   load_data(limit, start);
+            // }
 
-            if(action == 'inactive')
-            {
-              action = 'active';
-              load_data(limit, start);
-            }
-
-            $(window).scroll(function(){
-              if($(window).scrollTop() + $(window).height() > $("#activity-timeline").height() && action == 'inactive')
-              {
-                lazzy_loader(limit);
-                action = 'active';
-                start = start + limit;
-                $('#load_data_message').html('<h7><i>Please Wait...</i></h7>');
-                setTimeout(function(){
-                  load_data(limit, start);
-                }, 1000);
-              }
-            });
+            // $(window).scroll(function(){
+            //   if($(window).scrollTop() + $(window).height() > $("#activity-timeline").height() && action == 'inactive')
+            //   {
+            //     lazzy_loader(limit);
+            //     action = 'active';
+            //     start = start + limit;
+            //     $('#load_data_message').html('<h7><i>Please Wait...</i></h7>');
+            //     setTimeout(function(){
+            //       load_data(limit, start);
+            //     }, 1000);
+            //   }
+            // });
 
 
             $("#project_detail_status").change(function(){
@@ -485,6 +636,27 @@
             });
             });
 
+            $("#financial_type_add").change(function(){
+              var financial_type =  $(this).val();
+              var financial_ops_type =  $('#financial_ops_type_add').val();
+              if(financial_type == 'Uang Keluar' && financial_ops_type =='Operasional Mecasa'){
+                $('#div-financial-in-type').show();
+              }
+              else{
+                $('#div-financial-in-type').hide();
+              }
+            });
+
+            $("#financial_type_edit").change(function(){
+              var financial_type =  $(this).val();
+              if(financial_type == 'Uang Keluar' && financial_ops_type =='Operasional Mecasa'){
+                $('##div-financial-in-type-edit').show();
+              }
+              else{
+                $('##div-financial-in-type-edit').hide();
+              }
+            });
+            
           });
           function handleTickInit(tick) {
 
@@ -548,6 +720,63 @@
                 $('#photoHistoryAttachment').attr('src','<?= base_url();?>assets/attachments/'+row.attachment_name);
                 $('#project_financials_id_edit').val(row.project_financials_id);
             
+              }
+            });
+          }
+          function addInvoice(project_id) {
+            $.ajax({
+              type: "POST",
+              url: "<?php echo site_url('Project/getQuotationByProjectId');?>",
+              data: "project_id="+project_id,
+              success: function (response) {
+                var row = JSON.parse(response);
+                console.log(row.quotation_number);
+                var invoice_description = $('#invoice_type').val();
+                var invoice_nominal = $('#invoice_nominal').val();
+                if(invoice_description == "Down Payment"){
+                  invoice_number_type = 'D';
+                }
+                else if(invoice_description == "Termin 2"){
+                  invoice_number_type = 'T';
+                }
+                else if(invoice_description == "Pelunasan"){
+                  invoice_number_type = 'P';
+                }
+                else if(invoice_description == "Retensi"){
+                  invoice_number_type = 'R';
+                }
+                $('#invoice_price').html(invoice_nominal);
+                $('#invoice_total').html(invoice_nominal);
+                $('#invoice_number').html('IN-'+row.quotation_number.substr(2, 8)+'-'+invoice_number_type);
+                $('#invoice_description').html(invoice_description);
+                $("#quotation-div-print").show();
+
+
+                var HTML_Width = $("#quotation-div-print").width();
+                var HTML_Height = $("#quotation-div-print").height();
+                var top_left_margin = 0;
+                var PDF_Width = HTML_Width + (top_left_margin * 2);
+                var PDF_Height = (PDF_Width * 1.5) + (top_left_margin * 2);
+                var canvas_image_width = HTML_Width;
+                var canvas_image_height = HTML_Height;
+
+                var totalPDFPages = Math.ceil(HTML_Height / HTML_Height) - 1;
+
+                html2canvas($("#quotation-div-print")[0], {
+                scale: 10,
+                }).then(function (canvas) {
+                    var imgData = canvas.toDataURL("image/jpeg", 1.0);
+                    var pdf = new jsPDF('p', 'pt', [PDF_Width, HTML_Height]);
+                    pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin, canvas_image_width, canvas_image_height);
+                    for (var i = 1; i <= totalPDFPages; i++) { 
+                        pdf.addPage(PDF_Width, HTML_Height);
+                        pdf.addImage(imgData, 'JPG', top_left_margin, -(HTML_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
+                    }
+                    pdf.save("Invoice <?=$project->client_name?>.pdf");
+                    $("#quotation-div-print").hide();
+
+                    // $(".#quotation-div").hide();
+                });
               }
             });
           }
