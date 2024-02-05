@@ -152,6 +152,16 @@ margin-left:5px !important;
   left: 46px;
   z-index: 1;
 }
+.brief_revision_div > .note-status-output{
+  display: none !important;
+
+}
+.note-insert,.note-view,.note-fontname{
+  display: none !important;
+}
+/* .tick>div{
+  width: 100% !important;
+} */
 @media only screen and (max-width: 1440px) {
   .tick-label{
     font-size:9px !important;
@@ -164,3 +174,4 @@ margin-left:5px !important;
     z-index: 2;
   }
 }
+

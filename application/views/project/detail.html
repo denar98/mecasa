@@ -13,22 +13,33 @@
               <div class="col-sm-12">
                 <div class="card">
                   <div class="card-header">
-                    <h5 class="float-left">Detail Project</h5>
+                    <a href="<?=base_url()?>Project/edit/<?=$project->project_id?>"> <button style="padding: 0.45rem 1.75rem;" type="button" class="btn btn-warning float-left mr-3" name="button" >Edit Project</button></a>
+                    <button style="padding: 0.45rem 1.75rem;" type="button" class="btn btn-secondary float-left mr-3" name="button" data-toggle="modal" data-target="#addInvoiceModal">Invoice</button>
                     <!-- <a href="<?=base_url()?>Project/createProgress/<?=$project->project_id?>/<?=$project->project_detail_id?>"> <button type="button" class="btn btn-secondary float-right  ml-3">Tambah Progress</button></a> -->
                     <select class="form-control float-right ml-3" style="width:200px; padding: 0.1rem 0.75rem;" name="project_detail_status" id="project_detail_status" data-id="<?=$project->project_detail_id?>" data-project-id="<?=$project->project_id?>">
                       <option value="Progress" <?php if($project->project_detail_status=='Progress'){echo "selected";}?>>Progress</option>
                       <option value="Revision" <?php if($project->project_detail_status=='Revision'){echo "selected";}?>>Revision</option>
                       <option value="Done" <?php if($project->project_detail_status=='Done'){echo "selected";}?>>Done</option>
                     </select>
-                    <button style="padding: 0.45rem 1.75rem;" type="button" class="btn btn-primary float-right" name="button" data-toggle="modal" data-target="#addHistoryModal">Tambah History Keuangan</button>
-                    <a href="<?=base_url()?>Project/edit/<?=$project->project_id?>"> <button style="padding: 0.45rem 1.75rem;" type="button" class="btn btn-warning float-right mr-3" name="button" >Edit Project</button></a>
-                    <button style="padding: 0.45rem 1.75rem;" type="button" class="btn btn-secondary float-right mr-3" name="button" data-toggle="modal" data-target="#addInvoiceModal">Invoice</button>
+                    <button style="padding: 0.45rem 1.75rem;" type="button" class="btn btn-primary float-right" name="button" data-toggle="modal" data-target="#addHistoryModal">Tambah Keuangan</button>
+                    <button style="padding: 0.45rem 1.75rem;" type="button" class="btn btn-success float-right mr-3" name="button" data-toggle="modal" data-target="#addHistoryModal">Tambah Task</button>
                   </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <!-- Ajax data source array start-->
+              <div class="col-sm-8">
+                <div class="card">
+                  <!-- <div class="card-header">
+                    <h5 class="float-left">Detail Project</h5>
+                  </div> -->
                   <div class="card-body">
                     <div class="tab-content" id="top-tabContent">
                       <div class="default-according style-1 faq-accordion" id="accordionExample1">
                         <div class="row">
-                          <!-- <div class="col-xl-9 col-lg-9">
+                          <div class="col-xl-12 col-lg-12">
                             <div class="card ">
                               <div class="card-header" id="headingOneone">
                                 <h2 class="mb-0">
@@ -41,74 +52,9 @@
                                 </div>
                               </div>
                             </div>
-                            <div class="card ">
-                              <div class="card-header" id="headingTwo">
-                                <h2 class="mb-0">
-                                  <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">History Progress</button>
-                                </h2>
-                              </div>
-                              <div class="collapse show" id="collapseTwo" aria-labelledby="headingTwo" data-parent="#accordionExample1">
-                                <div class="card-body socialprofile filter-cards-view" id="divProgress">
-                                  <div class="activity-timeline" id="activity-timeline">
-
-                                  </div>
-                                </div>
-                                <div class="card-footer">                    
-                                  <p class="text-center text-info mt-3" id="load_data_message"></p>
-                                </div>
-                              </div>
-                            </div>
                             
-                          </div> -->
-                          <div class="col-xl-6 col-lg-6">
+                          </div>
 
-                            
-
-                            <div class="card" >
-                              <div class="card-header">Project Detail</div>
-                              <div class="card-body p-4" style="border-radius:10px;">
-                                <h6 class=""><?= $project->project_name ?></h6>
-                                <span class="btn btn-primary btn-xs mb-3 text-white"> Project <?= $project->project_detail_type?></span>
-                                <p>Nama Klien  <span class="pull-right font-weight-bold"> <?= $project->client_name?></span></p>
-                                <p>Nama PIC  <span class="pull-right font-weight-bold"> <?= $project->user_fullname?></span></p>
-                                <p>Nominal Project  <span class="pull-right font-weight-bold"> Rp. <?= number_format($project->project_detail_nominal)?></span></p>
-                                <p>Estimasi Profit  <span class="pull-right font-weight-bold"> Rp. <?= number_format($project->profit_estimation)?></span></p>
-                              </div>
-                            </div>
-                            <div class="card  mt-4" >
-                              <div class="card-header">Project Timeline</div>
-                              <div class="card-body p-4" style="border-radius:10px;">
-                                <!-- <span class="btn btn-primary btn-xs mb-3 text-white"> Project Timeline</span> -->
-                                <p>Tanggal Masuk  <span class="pull-right font-weight-bold"><?=date_format(date_create($project->start_date),"d M Y") ?></span></p>
-                                <p>Deadline  <span class="pull-right  font-weight-bold"><?=date_format(date_create($project->deadline),"d M Y") ?></span></p>
-                                <p class="float-left">Due In</p><div class="tick" data-did-init="handleTickInit" style="width: 45%; float:right;">
-                              
-                                    <div data-repeat="true"
-                                          data-layout="horizontal center fit"
-                                          data-transform="preset(d, h, m, s) -> delay">
-                                
-                                        <div class="tick-group">
-                                
-                                            <div data-key="value"
-                                                  data-repeat="true"
-                                                  data-transform="pad(00) -> split -> delay">
-                              
-                                                <span data-view="flip"></span>
-                                
-                                            </div>
-                                
-                                            <span data-key="label"
-                                                  data-view="text"
-                                                  class="tick-label"></span>
-                                
-                                        </div>
-                                
-                                    </div>
-                                
-                                </div>
-
-                              </div>
-                            </div>
                             <!-- <div class="card mt-4" >
                               <div class="card-header">Project Attachments</div>
                               <div class="card-body p-4" style="border-radius:10px;">
@@ -119,41 +65,7 @@
                                 </ul>                                
                               </div>
                             </div> -->
-                            
-                          </div>
-                          <div class="col-xl-6 col-lg-6">
-
-                            
-                            <div class="card" style="min-height: 650px" >
-                              <div class="card-header">Financial Histories</div>
-                              <div class="card-body p-4" style="border-radius:10px; overflow-y: scroll; height:400px;">
-                                <ul class="list-group list-group-flush">
-                                  <?php foreach($financials as $financial){ 
-                                    if($financial->financial_type == 'Uang Keluar'){
-                                      $btn_color = 'secondary';
-                                    }
-                                    else{
-                                      $btn_color = 'success';
-
-                                    }
-                                    ?>
-                                    <div class="activity-dot-<?=$btn_color?>" style="margin-top:18px;"></div>
-                                    <li class="list-group-item" style="margin-top:-31px; margin-left:10px;">
-                                      <a  data-toggle="modal" data-target="#editHistoryModal" style="cursor: pointer;" onclick="updateHistoryFinancial('<?=$financial->project_financials_id?>')"><p style="font-weight: bold; margin-bottom:0px;"> Rp. <?=number_format($financial->financial_nominal)?> - <span style="font-weight: 300;"><?=$financial->financial_type?></span> </p></a>
-                                      <a  data-toggle="modal" data-target="#photoHistoryModal" style="cursor: pointer;" onclick="photoHistoryFinancial('<?=$financial->project_financials_id?>')"><p style="margin-top:0px;"><?=date_format(date_create($financial->financial_date),"d M Y") ?> | <?=$financial->financial_note?>  | <?=$financial->financial_pic?></p></a>
-                                    </li>
-                                  <?php } ?>
-                                
-                                </ul> 
-                                <hr>
-                                  <p class="text-success" style="font-weight: bold; margin-bottom:0px;"> TOTAL MASUK <span class="pull-right">Rp. <?=number_format($financial_masuk_total->total)?> </span> </p>
-                                  <p  class="text-secondary" style="font-weight: bold; margin-bottom:0px;"> TOTAL KELUAR <span class="pull-right">Rp. <?=number_format($financial_keluar_total->total)?></span></p>
-                                  <p style="font-weight: bold; margin-bottom:0px;"> TOTAL MARGIN <span class="pull-right">Rp. <?=number_format($financial_masuk_total->total - $financial_keluar_total->total)?></span></p>
-                                                 
-                              </div>
-                            </div>
-                          </div>
-
+                     
                           <div class="quotation-div" id="quotation-div-print" style="width: 595px; height: 842px; position: relative; margin-left: auto; margin-right: auto; display: none;">
                             <div class="row">
                               <div class="col-md-12" style="background: url('<?=base_url()?>assets/images/asset-02.png'); background-position: right; background-size: cover; padding: 20px 60px; min-height: 280px;">
@@ -259,6 +171,121 @@
                     </div>
                   </div>
                 </div>
+                <div class="card">
+                  <!-- <div class="card-header">
+                    <h5 class="float-left">Detail Project</h5>
+                  </div> -->
+                  <div class="card-body">
+                    
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="card" >
+                  <!-- <div class="card-header">Project Detail</div> -->
+                  <div class="card-body" style="border-radius:10px;">
+                    <?php 
+                      if($project->project_detail_type=="Design"){
+                        $project_type_image = 'project_type-01.png';
+                      }
+                      else{
+                        $project_type_image = 'project_type-02.png';
+                      }
+                    ?>
+                    <img class="img mr-4 rounded float-left" src="<?=base_url()?>assets/images/<?=$project_type_image?>" style="width:50px;" alt="" data-original-title="" title="">
+                    <h6 class=""><?= $project->project_name ?></h6>
+                    <p><?=date_format(date_create($project->start_date),"d M Y") ?></p>
+                    <!-- <span class="btn btn-primary btn-xs mb-3 text-white"> Project <?= $project->project_detail_type?></span> -->
+                    
+                    <div class="tick mt-4" data-did-init="handleTickInit" style="width: 100%; text-align: center;">
+                  
+                      <div data-repeat="true"
+                            data-layout="horizontal center fit"
+                            data-transform="preset(d, h, m, s) -> delay">
+                  
+                          <div class="tick-group">
+                  
+                              <div data-key="value"
+                                    data-repeat="true"
+                                    data-transform="pad(00) -> split -> delay">
+                
+                                  <span data-view="flip"></span>
+                  
+                              </div>
+                  
+                              <span data-key="label"
+                                    data-view="text"
+                                    class="tick-label"></span>
+                  
+                          </div>
+                  
+                      </div>
+                  
+                  </div>
+                    <!-- <p>Nama Klien  <span class="pull-right font-weight-bold"> <?= $project->client_name?></span></p> -->
+
+                    <!-- <p>Nama PIC  <span class="pull-right font-weight-bold"> <?= $project->user_fullname?></span></p>
+                    <p>Nominal Project  <span class="pull-right font-weight-bold"> Rp. <?= number_format($project->project_detail_nominal)?></span></p>
+                    <p>Estimasi Profit  <span class="pull-right font-weight-bold"> Rp. <?= number_format($project->profit_estimation)?></span></p> -->
+                  </div>
+                </div>
+                <div class="card  mt-4"  >
+                  <div class="card-body" style="border-radius:10px;">
+                    <div class="row">
+                      <div class="col-md-6 mb-4">
+                        <p class="mb-0">Nominal</p>
+                        <span class="font-weight-bold"> Rp. <?= number_format($project->project_detail_nominal)?></span>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <p class="mb-0">Terbayar</p>
+                        <span class="font-weight-bold"> Rp. <?= number_format($project->project_detail_nominal)?></span>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <p class="mb-0">Sisa</p>
+                        <span class="font-weight-bold"> Rp. <?= number_format($project->project_detail_nominal)?></span>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <p class="mb-0">Saldo</p>
+                        <span class="font-weight-bold"> Rp. <?= number_format($project->project_detail_nominal)?></span>
+                      </div>
+                    </div>
+                    
+                  </div>
+
+                </div>
+                <div class="card" style="min-height: 650px" >
+                  <div class="card-body " style="border-radius:10px; overflow-y: scroll; height:400px;">
+                    <h6 class="mb-3">History Keuangan</h6>
+                    <p class="text-success" style="font-weight: bold; margin-bottom:0px;"> TOTAL MASUK <span class="pull-right">Rp. <?=number_format($financial_masuk_total->total)?> </span> </p>
+                    <p  class="text-secondary" style="font-weight: bold; margin-bottom:0px;"> TOTAL KELUAR <span class="pull-right">Rp. <?=number_format($financial_keluar_total->total)?></span></p>
+                    <hr class="mt-2 mb-2">
+                    <p style="font-weight: bold; margin-bottom:0px;"> TOTAL MARGIN <span class="pull-right">Rp. <?=number_format($financial_masuk_total->total - $financial_keluar_total->total)?></span></p>
+                    <hr class="mt-4">
+                    
+                    <ul class="list-group list-group-flush">
+                      <?php foreach($financials as $financial){ 
+                        if($financial->financial_type == 'Uang Keluar'){
+                          $btn_color = 'secondary';
+                        }
+                        else{
+                          $btn_color = 'success';
+
+                        }
+                        ?>
+                        <div class="activity-dot-<?=$btn_color?>" style="margin-top:18px;"></div>
+                        <li class="list-group-item" style="margin-top:-31px; margin-left:10px;">
+                          <a  data-toggle="modal" data-target="#editHistoryModal" style="cursor: pointer;" onclick="updateHistoryFinancial('<?=$financial->project_financials_id?>')"><p style="font-weight: bold; margin-bottom:0px;"> Rp. <?=number_format($financial->financial_nominal)?> - <span style="font-weight: 300;"><?=$financial->financial_type?></span> </p></a>
+                          <a  data-toggle="modal" data-target="#photoHistoryModal" style="cursor: pointer;" onclick="photoHistoryFinancial('<?=$financial->project_financials_id?>')"><p style="margin-top:0px;"><?=date_format(date_create($financial->financial_date),"d M Y") ?> | <?=$financial->financial_note?>  | <?=$financial->financial_pic?></p></a>
+                        </li>
+                      <?php } ?>
+                    
+                    </ul> 
+   
+                      
+                                     
+                  </div>
+                </div>
+
               </div>
               <!-- Ajax data source array end-->
             </div>

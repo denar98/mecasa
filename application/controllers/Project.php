@@ -380,7 +380,7 @@ class Project extends CI_Controller {
     $project_detail_nominal = str_replace( ',', '', $this->input->post('project_detail_nominal'));
     $profit_estimation = str_replace( ',', '', $this->input->post('profit_estimation')); 
     $project_date = $this->input->post('project_date');
-    $start_date = $this->input->post('start_date');
+    // $start_date = $this->input->post('start_date');
     $deadline = $this->input->post('deadline');
     // $brief = $this->input->post('brief');
     // $attachment_name = $this->input->post('attachment_name');
@@ -390,6 +390,7 @@ class Project extends CI_Controller {
     $project_detail_id="1";
     $project_row = $this->db->limit(1)->order_by('project_id','desc')->get('projects')->row();
     $project_detail_row = $this->db->limit(1)->order_by('project_detail_id','desc')->get('project_details')->row();
+    $client_row = $this->db->where('client_id',$client_id)->get('clients')->row();
 
     if($project_row->project_id !=0 || $project_row->project_id != ''){
       $project_id = $project_row->project_id + 1;
@@ -410,51 +411,155 @@ class Project extends CI_Controller {
       'project_detail_type' => $project_detail_type,
       'project_detail_nominal' => $project_detail_nominal,
       'profit_estimation' => $profit_estimation,
-      'start_date' => $start_date,
+      'start_date' => $project_date,
       'deadline' => $deadline,
       'user_id' => $user_id,
-      // 'brief' => $brief,
+      'brief' => $brief,
       'project_detail_percentage' => $project_detail_percentage,
       'project_detail_status' => $project_detail_status,
     );
 
 
-    // $attachments = [];
+    $floor_plan_attachments = [];
    
-    // $count = count($_FILES['files']['name']);
+    $floor_plan_count = count($_FILES['floor_plan_files']['name']);
   
-    // for($i=0;$i<$count;$i++){
+    for($i=0;$i<$floor_plan_count;$i++){
   
-    //   if(!empty($_FILES['files']['name'][$i])){
+      if(!empty($_FILES['floor_plan_files']['name'][$i])){
   
-    //     $_FILES['file']['name'] = $_FILES['files']['name'][$i];
-    //     $_FILES['file']['type'] = $_FILES['files']['type'][$i];
-    //     $_FILES['file']['tmp_name'] = $_FILES['files']['tmp_name'][$i];
-    //     $_FILES['file']['error'] = $_FILES['files']['error'][$i];
-    //     $_FILES['file']['size'] = $_FILES['files']['size'][$i];
+        if (!is_dir('assets/requirement/'.$client_row->client_name.'/attachments')) {
+          mkdir('assets/requirement/'.$client_row->client_name.'/attachments', 0777, TRUE);
+        }
+        $path = './assets/requirement/'.$client_row->client_name.'/attachments';
+        $_FILES['file']['name'] = $_FILES['floor_plan_files']['name'][$i];
+        $_FILES['file']['type'] = $_FILES['floor_plan_files']['type'][$i];
+        $_FILES['file']['tmp_name'] = $_FILES['floor_plan_files']['tmp_name'][$i];
+        $_FILES['file']['error'] = $_FILES['floor_plan_files']['error'][$i];
+        $_FILES['file']['size'] = $_FILES['floor_plan_files']['size'][$i];
 
-    //     $config['upload_path'] = 'assets/attachments'; 
-    //     $config['allowed_types'] = 'jpg|jpeg|png|gif|pdf|docx|doc|xlsx|ai|psd';
-    //     $config['file_name'] = $_FILES['files']['name'][$i];
+        $config['upload_path'] = $path; 
+        $config['allowed_types'] = 'jpg|jpeg|png|gif|pdf|docx|doc|xlsx|ai|psd|zip|rar';
+        $config['overwrite'] = FALSE;
+        $config['file_name'] = $_FILES['floor_plan_files']['name'][$i];
+
         
-    //     $this->upload->initialize($config);
+        $this->upload->initialize($config);
 
-    //     if($this->upload->do_upload('file')){
-    //       $uploadData = $this->upload->data();
-    //       $filename = $uploadData['file_name'];
+        if($this->upload->do_upload('file')){
+          $uploadData = $this->upload->data();
+          $filename = $uploadData['file_name'];
  
-    //       $attachments['totalFiles'][] = $filename;
+          $floor_plan_attachments['totalFiles'][] = $filename;
 
-    //       $data_attachments = array(
-    //         'project_detail_id' => $project_detail_id,
-    //         'attachment_name' => $filename,
-    //       );
-    //       $add_attachments = $this->crud_model->createData('project_detail_attachments',$data_attachments);
+          $data_attachments = array(
+            'project_detail_id' => $project_detail_id,
+            'attachment_name' => $filename,
+            'project_detail_attachment_type' => 'Floor Plan',
+            'project_detail_attachment_ext' =>$uploadData['file_ext'],
+            'project_detail_attachment_width' => $uploadData['image_width'],
+            'project_detail_attachment_height' => $uploadData['image_height'],
+        );
+          $this->crud_model->createData('project_detail_attachments',$data_attachments);
       
-    //     }
-    //   }
+        }
+      }
 
-    // }
+    }
+
+    $reference_files_attachments = [];
+   
+    $reference_files_count = count($_FILES['reference_files']['name']);
+  
+    for($i=0;$i<$reference_files_count;$i++){
+  
+      if(!empty($_FILES['reference_files']['name'][$i])){
+  
+        if (!is_dir('assets/requirement/'.$client_row->client_name.'/attachments')) {
+          mkdir('assets/requirement/'.$client_row->client_name.'/attachments', 0777, TRUE);
+        }
+        $path = './assets/requirement/'.$client_row->client_name.'/attachments';
+        $_FILES['file']['name'] = $_FILES['reference_files']['name'][$i];
+        $_FILES['file']['type'] = $_FILES['reference_files']['type'][$i];
+        $_FILES['file']['tmp_name'] = $_FILES['reference_files']['tmp_name'][$i];
+        $_FILES['file']['error'] = $_FILES['reference_files']['error'][$i];
+        $_FILES['file']['size'] = $_FILES['reference_files']['size'][$i];
+
+        $config['upload_path'] = $path; 
+        $config['allowed_types'] = 'jpg|jpeg|png|gif|pdf|docx|doc|xlsx|ai|psd|zip|rar';
+        $config['overwrite'] = FALSE;
+        $config['file_name'] = $_FILES['reference_files']['name'][$i];
+
+        
+        $this->upload->initialize($config);
+
+        if($this->upload->do_upload('file')){
+          $uploadData = $this->upload->data();
+          $filename = $uploadData['file_name'];
+ 
+          $reference_files_attachments['totalFiles'][] = $filename;
+
+          $reference_files_data_attachments = array(
+            'project_detail_id' => $project_detail_id,
+            'attachment_name' => $filename,
+            'project_detail_attachment_type' => 'Reference',
+            'project_detail_attachment_ext' =>$uploadData['file_ext'],
+            'project_detail_attachment_width' => $uploadData['image_width'],
+            'project_detail_attachment_height' => $uploadData['image_height'],
+        );
+          $this->crud_model->createData('project_detail_attachments',$reference_files_data_attachments);
+      
+        }
+      }
+
+    }
+
+    $existing_photo_attachments = [];
+   
+    $existing_photo_count = count($_FILES['existing_photo_files']['name']);
+  
+    for($i=0;$i<$existing_photo_count;$i++){
+  
+      if(!empty($_FILES['existing_photo_files']['name'][$i])){
+  
+        if (!is_dir('assets/requirement/'.$client_row->client_name.'/attachments')) {
+          mkdir('assets/requirement/'.$client_row->client_name.'/attachments', 0777, TRUE);
+        }
+        $path = './assets/requirement/'.$client_row->client_name.'/attachments';
+        $_FILES['file']['name'] = $_FILES['existing_photo_files']['name'][$i];
+        $_FILES['file']['type'] = $_FILES['existing_photo_files']['type'][$i];
+        $_FILES['file']['tmp_name'] = $_FILES['existing_photo_files']['tmp_name'][$i];
+        $_FILES['file']['error'] = $_FILES['existing_photo_files']['error'][$i];
+        $_FILES['file']['size'] = $_FILES['existing_photo_files']['size'][$i];
+
+        $config['upload_path'] = $path; 
+        $config['allowed_types'] = 'jpg|jpeg|png|gif|pdf|docx|doc|xlsx|ai|psd|zip|rar';
+        $config['overwrite'] = FALSE;
+        $config['file_name'] = $_FILES['existing_photo_files']['name'][$i];
+
+        
+        $this->upload->initialize($config);
+
+        if($this->upload->do_upload('file')){
+          $uploadData = $this->upload->data();
+          $filename = $uploadData['file_name'];
+ 
+          $existing_photo_attachments['totalFiles'][] = $filename;
+
+          $existing_photo_files_data_attachments = array(
+            'project_detail_id' => $project_detail_id,
+            'attachment_name' => $filename,
+            'project_detail_attachment_type' => 'Existing Photo',
+            'project_detail_attachment_ext' =>$uploadData['file_ext'],
+            'project_detail_attachment_width' => $uploadData['image_width'],
+            'project_detail_attachment_height' => $uploadData['image_height'],
+        );
+          $this->crud_model->createData('project_detail_attachments',$existing_photo_files_data_attachments);
+      
+        }
+      }
+
+    }
     
     $add_project = $this->crud_model->createData('projects',$data_project);
   
