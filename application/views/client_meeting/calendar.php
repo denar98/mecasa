@@ -130,6 +130,8 @@
   </div>
 </div>
 
+<script src="<?=base_url()?>assets/js/calendar/fullcalendars.min.js"></script>
+<script src="<?=base_url()?>assets/js/calendar/fullcalendars-custom.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

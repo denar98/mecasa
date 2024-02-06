@@ -220,14 +220,13 @@
                           </div>
                   
                       </div>
-                  
+                    </div>                  
                   </div>
                     <!-- <p>Nama Klien  <span class="pull-right font-weight-bold"> <?= $project->client_name?></span></p> -->
 
                     <!-- <p>Nama PIC  <span class="pull-right font-weight-bold"> <?= $project->user_fullname?></span></p>
                     <p>Nominal Project  <span class="pull-right font-weight-bold"> Rp. <?= number_format($project->project_detail_nominal)?></span></p>
                     <p>Estimasi Profit  <span class="pull-right font-weight-bold"> Rp. <?= number_format($project->profit_estimation)?></span></p> -->
-                  </div>
                 </div>
                 <div class="card  mt-4"  >
                   <div class="card-body" style="border-radius:10px;">
@@ -687,15 +686,16 @@
           });
           function handleTickInit(tick) {
 
-
             var nextYear = (new Date()).getFullYear() + 1;
             var deadline = "<?=$project->deadline?>"
-            console.log(nextYear);
+            console.log(deadline);
+            console.log((new Date()).getFullYear());
             Tick.count.down(deadline).onupdate = function(value) {
             tick.value = value;
             };
 
-            }
+          }
+
           function updateProgress(progress_history_id) {
             $.ajax({
               type: "POST",
