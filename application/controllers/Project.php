@@ -210,7 +210,122 @@ class Project extends CI_Controller {
     echo json_encode($output);
     exit();
   }
-  
+
+  public function fetchProject()
+  {
+    $output = '';
+
+    
+    $keyword = $this->input->post('keyword');
+    $order_status = $this->input->post('order_status');
+    $project_type = $this->input->post('project_type');
+
+    // if($keyword != 'null'){
+      $data = $this->custom_model->getDataProjects($this->input->post('limit'), $this->input->post('start'),$keyword,$order_status,$project_type);
+    // }
+    // else if($keyword == 'null'){
+    //   $data = $this->custom_model->getDataProjects($this->input->post('limit'), $this->input->post('start'),'null');
+
+    // }
+
+    if($data->num_rows() > 0)
+    {
+     foreach($data->result() as $row)
+     {
+
+
+      if($row->project_detail_type=="Design"){
+        $project_type_image = 'project_type-01.png';
+      }
+      else{
+        $project_type_image = 'project_type-02.png';
+      }
+
+
+      if($row->assign_to==null){
+        $assign = "Not Assign";
+        $btn_status = '';
+      }else{
+        $assign = $row->assign_to;
+        $btn_status = 'disabled="disabled"';
+      }
+
+      $rem = strtotime($row->deadline) - time();
+      $days_remaining = floor($rem / 86400);
+      $hours_remaining  = floor(($rem % 86400) / 3600);
+      $due_in = $days_remaining.'d, '.$hours_remaining.'h'; 
+      $due_color = "black"; 
+      if($days_remaining<=0 && $hours_remaining<=0){
+        $due_in = "Late";
+        $due_color = "danger";
+      }
+
+      $financial_project = $this->custom_model->getInFinancialProject($row->project_id)->row();
+      $financial_keluar_total = $this->custom_model->getFinancialProjectTotal($row->project_id,'Uang Keluar')->row();
+      $financial_masuk_total = $this->custom_model->getFinancialProjectTotal($row->project_id,'Uang Masuk')->row();
+
+      // date_format(date_create($row->order_deadline),"d M Y")
+      // echo "There are $days_remaining days and $hours_remaining hours left";
+
+      $project_id = "'$row->project_id'";
+      $output .= '
+      
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 mt-1 mb-2">
+          <!-- <div class="project-box" style="padding:5px 15px !important;"><span class="badge badge-'.$badge_color.'">'.$row->order_status.'</span> -->
+            <div class="row">
+              <div class="media col-md-3  mt-2 mb-1">
+              <img class="img mr-4 rounded" src="'.base_url().'assets/images/'.$project_type_image.'" style="width:55px;" alt="" data-original-title="" title="">
+              <div class="media-body pt-2">
+                  <a href="'.base_url().'Project/detail/'.$row->project_id.'"><h6>'.$row->project_name.'</h6></a>
+                  <h7 class="mb-0 mt-2">'.$row->project_date.'</h7>
+                </div>
+              </div>
+              <div class="media col-md-2 mt-2 mb-1">
+                <div class="media-body pt-2">
+                  <h6 class="text-'.$due_color.'">'.$due_in.'</h6>
+                  <h7 class="mb-0 mt-2">Deadline</h7>
+                </div>
+              </div>
+              <div class="media col-md-2 mt-2 mb-1">
+                <div class="media-body pt-2">
+                  <h6>'.number_format($row->project_detail_nominal).'</h6>
+                  <h7 class="mb-0 mt-2">Nominal</h7>
+                </div>
+              </div>
+              <div class="media col-md-2 mt-2 mb-1">
+                <div class="media-body pt-2">
+                  <h6>'.number_format($row->project_detail_nominal-$financial_project->uang_masuk).'</h6>
+                  <h7 class="mb-0 mt-2">Sisa</h7>
+                </div>
+              </div>
+              <div class="media col-md-2 mt-2 mb-1">
+                <div class="media-body pt-2">
+                  <h6>'.number_format($financial_masuk_total->total - $financial_keluar_total->total).'</h6>
+                  <h7 class="mb-0 mt-2">Saldo</h7>
+                </div>
+              </div>
+
+              <div class="media col-md-1 mt-2 mb-1">
+                <div class="media-body pt-2">
+                  <button class="btn btn-'.$service_color.'" style="padding: 1px 30px; display:block; width: 95px; cursor:context-menu;">'.$service_package_name.'</button>
+                  <button class="btn btn-secondary mt-1 btn-not-assign" data-assign="'.$assign.'" '.$btn_status.'   onclick="assignOrder('.$project_id.')" style="padding: 1px 10px; display:block;">'.$assign.'</button>
+                </div>
+              </div>
+            </div>
+            <div class="project-status mt-0">
+            <!--<div class="progress" style="height: 5px">
+                <div class="progress-bar-animated '.$progress_color.' progress-bar-striped" role="progressbar" style="width: 100%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+              </div> -->
+            </div>
+          </div>
+        </div>
+        <hr>
+      </div>';
+     }
+    }
+    echo $output;
+  }
   public function fetchProjectFilter()
   {
     $output = '';

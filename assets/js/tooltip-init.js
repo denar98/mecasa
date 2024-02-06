@@ -1,12 +1,9 @@
-(function($) {
-	"use strict";
-	var tooltip_init = {
-		init: function() {
-			$("button").tooltip();
-			$("a").tooltip();
-			$("input").tooltip();
-			$("img").tooltip();
-		}
-	};
-    tooltip_init.init()
-})(jQuery);
+// Tooltip-init
+"use strict";
+
+const tooltipTriggerList = document.querySelectorAll(
+  '[data-bs-toggle="tooltip"]'
+);
+const tooltipList = [...tooltipTriggerList].map(
+  (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+);

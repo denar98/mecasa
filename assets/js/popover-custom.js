@@ -1,10 +1,6 @@
-"use strict";
-$(function () {
-    $('.example-popover').popover({
-        container: 'body'
-    });
-    var dcolor = $(".example-popover").attr("data-theme");
-    if(dcolor == "dark") {
-        $(".popover").addClass("bg-dark");
-    }
-})
+var popoverTriggerList = [].slice.call(
+  document.querySelectorAll('[data-bs-toggle="popover"]')
+);
+var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+  return new bootstrap.Popover(popoverTriggerEl);
+});
