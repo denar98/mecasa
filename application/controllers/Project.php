@@ -90,10 +90,10 @@ class Project extends CI_Controller {
 	public function detail($project_id)
 	{
     $data['project'] = $this->custom_model->getDetailDataProject($project_id)->row();
-    $data['attachments'] = $this->custom_model->getAttachmentProject($project_id)->result();
-    $data['financials'] = $this->custom_model->getFinancialProject($project_id)->result();
+    $data['financial_project'] = $this->custom_model->getInFinancialProject($project_id)->row();
     $data['financial_keluar_total'] = $this->custom_model->getFinancialProjectTotal($project_id,'Uang Keluar')->row();
     $data['financial_masuk_total'] = $this->custom_model->getFinancialProjectTotal($project_id,'Uang Masuk')->row();
+    
 		$this->load->view('template/head.html');
 		$this->load->view('project/detail.html',$data);
 		$this->load->view('template/foot.html');
@@ -217,11 +217,11 @@ class Project extends CI_Controller {
 
     
     $keyword = $this->input->post('keyword');
-    $order_status = $this->input->post('order_status');
+    $project_status = $this->input->post('project_status');
     $project_type = $this->input->post('project_type');
 
     // if($keyword != 'null'){
-      $data = $this->custom_model->getDataProjects($this->input->post('limit'), $this->input->post('start'),$keyword,$order_status,$project_type);
+      $data = $this->custom_model->getDataProjects($this->input->post('limit'), $this->input->post('start'),$keyword,$project_status,$project_type);
     // }
     // else if($keyword == 'null'){
     //   $data = $this->custom_model->getDataProjects($this->input->post('limit'), $this->input->post('start'),'null');

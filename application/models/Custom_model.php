@@ -111,7 +111,7 @@ class Custom_model extends CI_Model
             //   $this->db->where('project_details.project_detail_type',$project_type);
             //  }
             //  if($project_status != 'All' ){
-            //   $this->db->where('project_details.project_detail_status',$project_status);
+              $this->db->where('project_details.project_detail_status',$project_status);
             //  }
             //  if($keyword != ''){
               // $this->db->where($where);
@@ -473,14 +473,15 @@ class Custom_model extends CI_Model
             return $query;
 
   }
-  public function getAttachmentProject($project_id)
+  public function getAttachmentProject($project_id,$project_detail_attachment_type)
   {
 
     $query = $this->db->select('project_detail_attachments.*,project_details.*,projects.*')
              ->from('project_detail_attachments')
              ->join("project_details","project_detail_attachments.project_detail_id = project_details.project_detail_id")
              ->join("projects","projects.project_id = project_details.project_id")
-             ->where('projects.project_id',$project_id);
+             ->where('projects.project_id',$project_id)
+             ->where('project_detail_attachments.project_detail_attachment_type',$project_detail_attachment_type);
             
             $query = $this->db->get();
 
