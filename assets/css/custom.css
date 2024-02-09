@@ -161,6 +161,9 @@ margin-left:5px !important;
 .customizer-links{
   display: none !important;
 }
+.theme-form input[type=text], .theme-form input[type=email], .theme-form input[type=search], .theme-form input[type=password], .theme-form input[type=number], .theme-form input[type=tel], .theme-form input[type=date], .theme-form input[type=datetime-local], .theme-form input[type=time], .theme-form input[type=datetime-local], .theme-form input[type=month], .theme-form input[type=week], .theme-form input[type=url], .theme-form input[type=file], .theme-form textarea, .theme-form select{
+  padding:8px !important;
+}
 @media only screen and (max-width: 1440px) {
   .tick-label{
     font-size:9px !important;

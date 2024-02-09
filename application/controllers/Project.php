@@ -90,10 +90,17 @@ class Project extends CI_Controller {
 	public function detail($project_id)
 	{
     $data['project'] = $this->custom_model->getDetailDataProject($project_id)->row();
+    $data['financials'] = $this->custom_model->getFinancialProject($project_id)->result();
     $data['financial_project'] = $this->custom_model->getInFinancialProject($project_id)->row();
     $data['financial_keluar_total'] = $this->custom_model->getFinancialProjectTotal($project_id,'Uang Keluar')->row();
     $data['financial_masuk_total'] = $this->custom_model->getFinancialProjectTotal($project_id,'Uang Masuk')->row();
     
+    // $data['task_deliveries'] = $this->task_model->getTaskDeliveryByOrderId($order_id)->result();
+    // $data['task'] = $this->task_model->getTaskByOrderId($order_id)->result();
+    $data['users'] = $this->db->get("users")->result();
+    $data['tags'] = $this->db->get("tags")->result();
+
+
 		$this->load->view('template/head.html');
 		$this->load->view('project/detail.html',$data);
 		$this->load->view('template/foot.html');
